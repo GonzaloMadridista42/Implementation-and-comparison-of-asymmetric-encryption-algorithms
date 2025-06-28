@@ -1,0 +1,88 @@
+C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\Codes python RSA, El-Gamal et ECC avec critères d'évaluation\Codes python ECC avec critères d'évaluation>python Code_Python_ECC_Version_5_Avec_Complexite_Algorithmique.py
+The present Python program will demonstrate the effectiveness of a right implementation of the ECC asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm ECC uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:
+
+a: 256 bits.
+b: 384 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+The standard key sizes and standard message length showed above are used by the ECC asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are not used for specifying the size of the message that must be first encrypted and then decrypted by this ECC asymmetric encryption and decryption algorithm.
+
+The reason of that statement is simple: the ECC assymetric encryption and decryption algorithm only need the key sizes showed above, to encrypt and decrypt either short, medium and long messages, those messages usually have the following standard message lenght:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:
+
+Standard message lenghts:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+Standard key sizes:
+a: 256 bits.
+b: 304 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+For that purpose, please specify and choose a standard message length from the list shown above:
+Enter your choice (a, b, c, d, e, or f): d
+For that purpose, please specify and choose a standard key size from the list shown above:
+Enter your choice (a, b, c, d, e, or f): d
+Enter a message that contains maximum 768 characters, spaces included: Dans le domaine médical, les professionnels dédient leur vie au bien-être. Dans les hôpitaux, cliniques ou sur le terrain, ils font preuve de compassion et de compétence pour soigner et sauver des vies. Ces héros inspirent confiance et espoir, guidant les patients avec empathie. Leur impact transcende les frontières de la maladie, apportant guérison et réconfort à ceux qui en ont besoin. Médecins, infirmières et professionnels consacrent temps et énergie à améliorer la vie des autres, avec un altruisme admirable et un engagement incéssant envers la société. Il est clair que les sociétés du monde ont besoin des professionnels de la santé, donc on doit toujours valoriser et féliciter le travail qu'ils réalisent en faveur de notre santé.
+Now that a standard key size and a standanrd message lenght has been chosed by the user, now the ECC assymetric encryption and decryption algorithm needs now to know which elliptic curve will be used, to perform all the process associated to this ECC assymetric algorithm, like the creation of public and private keys, the creation of shared keys and the encryption and decryption of messages.
+In order to encrypt and decrypt clear and plain messages, the ECC assymetric encryption and decryption algorithm, implemented by the present program, needs to take one of the following elliptic curves, among an immense range of options determined by international organisations:
+a: SECP256R1.
+b: SECP384R1.
+c: SECT409R1.
+d: BrainpooolP512R1.
+e: SECP521R1.
+f: SECT571K1.
+
+For that purpose, please specify and choose an elliptic curve using the standard key size chosen above, from the list shown above:
+Enter your choice (a, b, c, d, e, or f): d
+
+Clear Message :
+Dans le domaine médical, les professionnels dédient leur vie au bien-être. Dans les hôpitaux, cliniques ou sur le terrain, ils font preuve de compassion et de compétence pour soigner et sauver des vies. Ces héros inspirent confiance et espoir, guidant les patients avec empathie. Leur impact transcende les frontières de la maladie, apportant guérison et réconfort à ceux qui en ont besoin. Médecins, infirmières et professionnels consacrent temps et énergie à améliorer la vie des autres, avec un altruisme admirable et un engagement incéssant envers la société. Il est clair que les sociétés du monde ont besoin des professionnels de la santé, donc on doit toujours valoriser et féliciter le travail qu'ils réalisent en faveur de notre santé.
+
+ECC Private Key:
+4520979039275551898022552417604342022878429687317290199564006156693470750714295924013096207594015185724746025395290985476370082401150059518270886870806097
+
+ECC Public Key :
+6599746142909303783313695653843241395488481129804353270420968873659243679501038413102095337245311159466427422076355151006550672930102445546468232975260877
+
+Ciphertext pubKey:
+74ee6421f7bdd47c4b156f10203c0057bde6aee1cd292c9afdde915adb957aab
+
+Encryption Key:
+74ee6421f7bdd47c4b156f10203c0057bde6aee1cd292c9afdde915adb957aab
+
+Decryption Key:
+74ee6421f7bdd47c4b156f10203c0057bde6aee1cd292c9afdde915adb957aab
+
+Encrypted Message:
+{'ciphertext': '8a424827d58f55a01dd393b760b9bc4ceae35da6bc8d5de4bd5ff15e7e6d8092805eb437566b81910b62c590a852e0c646c25fc32d496ccf5481716da6a8db783cf42cbeb0d7030f999880145559ec2f0a8e051e7a13c8558f85b8250625e83919e75adbcb3d693f5f2b72f08ea5adf6808056fd6bbaf5e9b7a94b0ba5e4d0586c7b051b942c05bcefbb39ec9c12ce393ca6825e084fac9453de35f94945af9a641c77920e68e8b4b2129c98058d8416b9599944158c9848c908c6b1f28eecb87ea4576413a024c63ba400c26c7f21c5cd0281ab8c5b9ba661ff628a8e8e496579f8dbdac026b301578a07ee08c465a1c4144526075a0ea4ff6cb08c20edfce381833732572457c42b1bfe4109a95e80bff9b75858ca071bc3ac880257198e928f1596f0ece8aad9a08760e48260f53cbe526f6e4d9773fe5d4a52d4a990f8b04813e7aab3d752263d781771d2cb04024d25c23dcd969fc73e144929371d227f9bd31ccb9b60b8e638bd76952d75cdae654c5797a483ede0162020a6dbc938c30d6ae843d81b24d1256e25e1d96d629a207827aa57962582643aed3e726e2ed07eeff18bbbf84841cd9ff6f3ca1da744d71a795d8b3393d753121dbb9e0f281f1df26405507a5b8e01669c57a08bff51902cae4a1185c8ce6b80887a119cddaf07e7e53bd6a517f1346080de118ed7fc2b2ccca33feae1eb9a5c4ce8ece8c518f9f54c44a93f16dbf6494a918f3dccd60a956aa6ca7929b2ae6b663a224e47e4e9c76eecbfdd3e8131726650029a8aeb84cb398cb314e2acb257c325c55f7fda0a810ecdeda730ec2c502a6378c4c5cd70357d4160046f3480513b503d5c07c7e505717aae2e43cf2aaa2d43aa962cae5b56f03a1a071f3b0ca583ed50a64da2c8646e02b74d21d6f9ebe5452382581335942891d6d6e24c4cc51cbc83c0a80523a0e4f22d01ca765a1b7da080fe44623cbd06122c339967df24283218e9817a5ac65f9141e99bee2f96aca012303b8fbb5ae4cf465a564de8e05ea39f8359d3b9e4a4a6ee031c810a79eb4ebe499f33f2ad0a4c84961623491ab2fe7dc7a4b3', 'nonce': 'af8b0b33acc64908b593afc64d6a05e7', 'authTag': '2304fd8a329be75f4df18e1318d240da', 'ciphertextPubKey': (6599746142909303783313695653843241395488481129804353270420968873659243679501038413102095337245311159466427422076355151006550672930102445546468232975260877, 483736622317843591338909977076597738578416400305565298689175821711141481564017845559276465427887948761338548678625135450069490124523493521727431039887903)}
+
+Decrypted Message:
+Dans le domaine médical, les professionnels dédient leur vie au bien-être. Dans les hôpitaux, cliniques ou sur le terrain, ils font preuve de compassion et de compétence pour soigner et sauver des vies. Ces héros inspirent confiance et espoir, guidant les patients avec empathie. Leur impact transcende les frontières de la maladie, apportant guérison et réconfort à ceux qui en ont besoin. Médecins, infirmières et professionnels consacrent temps et énergie à améliorer la vie des autres, avec un altruisme admirable et un engagement incéssant envers la société. Il est clair que les sociétés du monde ont besoin des professionnels de la santé, donc on doit toujours valoriser et féliciter le travail qu'ils réalisent en faveur de notre santé.
+
+Complexity of key generation:
+Time taken: 0.00000001 seconds
+Memory used: 12.00000000 KB
+
+Encryption time: 0.00000001 seconds
+Memory used during encryption: 27500.00000000 KB
+
+Decryption time: 0.00000001 seconds
+Memory used during decryption: 27500.00000000 KB

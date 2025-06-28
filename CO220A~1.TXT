@@ -1,0 +1,140 @@
+C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\Codes python RSA, El-Gamal et ECC avec critères d'évaluation\Codes python ECC avec critères d'évaluation>python Code_Python_ECC_Version_5_Avec_Comparaison_Temps_Execution_Avec_Differentes_Tailles_Cles.py
+The present Python program will demonstrate the effectiveness of a right implementation of the ECC asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm ECC uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:
+
+a: 256 bits.
+b: 384 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+The standard key sizes and standard message length showed above are used by the ECC asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are not used for specifying the size of the message that must be first encrypted and then decrypted by this ECC asymmetric encryption and decryption algorithm.
+
+The reason of that statement is simple: the ECC assymetric encryption and decryption algorithm only need the key sizes showed above, to encrypt and decrypt either short, medium and long messages, those messages usually have the following standard message lenght:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:
+
+Standard message lenghts:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+Standard key sizes:
+a: 256 bits.
+b: 304 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+For that purpose, please specify and choose a standard message length from the list shown above:
+Enter your choice (a, b, c, d, e, or f): b
+For that purpose, please specify and choose a standard key size from the list shown above:
+Enter your choice (a, b, c, d, e, or f): b
+Enter a message that contains maximum 384 characters, spaces included: In football, the best players that highten the most that sport are the players who have the best mentality and attitude, either when they play football in the pitch, either they are outside the pitch, and they always will show the best attitude and mentality to overcome all the obstacles they may encounter in real life and when playing football. Those players are also good parents.
+Now that a standard key size and a standanrd message lenght has been chosed by the user, now the ECC assymetric encryption and decryption algorithm needs now to know which elliptic curve will be used, to perform all the process associated to this ECC assymetric algorithm, like the creation of public and private keys, the creation of shared keys and the encryption and decryption of messages.
+In order to encrypt and decrypt clear and plain messages, the ECC assymetric encryption and decryption algorithm, implemented by the present program, needs to take one of the following elliptic curves, among an immense range of options determined by international organisations:
+a: SECP256R1.
+b: SECP384R1.
+c: SECT409R1.
+d: BrainpooolP512R1.
+e: SECP521R1.
+f: SECT571K1.
+
+For that purpose, please specify and choose an elliptic curve using the standard key size chosen above, from the list shown above:
+Enter your choice (a, b, c, d, e, or f): b
+
+Clear Message :
+In football, the best players that highten the most that sport are the players who have the best mentality and attitude, either when they play football in the pitch, either they are outside the pitch, and they always will show the best attitude and mentality to overcome all the obstacles they may encounter in real life and when playing football. Those players are also good parents.
+
+ECC Private Key:
+18603552343113754501391819902864658874190926500712348793125455148186156533110397600340040008356983623634479136412186
+
+ECC Public Key :
+5014156852432778660650424062141476223390709026019176392431400229902994810286960607027061458187926101760601270059137
+
+Ciphertext pubKey:
+01008aac257d969c758e85eaf1d1d8e09ca1d51bfb765ba189bb10bfed3790ab
+
+Encryption Key:
+01008aac257d969c758e85eaf1d1d8e09ca1d51bfb765ba189bb10bfed3790ab
+
+Decryption Key:
+01008aac257d969c758e85eaf1d1d8e09ca1d51bfb765ba189bb10bfed3790ab
+
+Encrypted Message:
+{'ciphertext': '1782c413ffd5319f5504380f1428211427ce83a47cc2b690fdd19992952b4700b30648eaad3eb478474b09b4933022a3eb7239331fe426daa6754cd6367135ba39ab29b6e61dea44d6d3ddd2f80ae0bdc7ca84531035b228425bfd83d215f57edf56c0886ede6e6979c77040b24559c360075f9e948b0b074def26a0a4969d7e9a0f8a693c690e293294f43b2921cd2c45d8e8a3eb76b23e548422383fcfb6d13482c4fdbec3d0be5636e26b8eac2a118cc05b9e764367e534db4d45e8d9acf59cfc013c3b6f719f04d8af42ec6b9a63b5a3eabfc486f1abedf15308a0ea79b0c57ecdb75d75bc532fedfd72e0ce3111c8d5dadd1ee72f96e164ad55b4ecdd9a2dd873b34b945ae6d5a51e2b50b6700e1df6038557604b8dbffbcc002bbafd59b6f4b3391cef7df60ca4737b44e7758096b444e36c93f295b65c3a61431ac8a6d3e717b3d6ed31a5a5c9846011af53b690597d00e69cb8b5baaa4bf73c8550e3eb91d2bc7f3276543688a072df8df21b9b39c3cdecac360d60e1c04543ff766e', 'nonce': 'f0e89fdc7a3fcb5b7097001c37b8de7b', 'authTag': 'b252f5e73a4f9238d9f51e0086a8c90f', 'ciphertextPubKey': (5014156852432778660650424062141476223390709026019176392431400229902994810286960607027061458187926101760601270059137, 12203306049513375356923602842676559711580782802039114834444031314816544033475230845015836354563986784943312754245794)}
+
+Decrypted Message:
+In football, the best players that highten the most that sport are the players who have the best mentality and attitude, either when they play football in the pitch, either they are outside the pitch, and they always will show the best attitude and mentality to overcome all the obstacles they may encounter in real life and when playing football. Those players are also good parents.
+
+Measuring key generation time for a key size of 256 bits...
+5 keys generated for a key size of 256 bits:
+Key 1: 56544637855378744067711371636885102055946643528923655725963001030612313320970
+Key 2: 56544637855378744067711371636885102055946643528923655725963001030612313320970
+Key 3: 56544637855378744067711371636885102055946643528923655725963001030612313320970
+Key 4: 56544637855378744067711371636885102055946643528923655725963001030612313320970
+Key 5: 56544637855378744067711371636885102055946643528923655725963001030612313320970
+Key generation time for a key size of 256 bits: 0.0 seconds
+
+Measuring key generation time for a key size of 384 bits...
+5 keys generated for a key size of 384 bits:
+Key 1: 31888620759167175168678396596793878613351875171100615087168138250147483763099593890866106239014898112804139533361095
+Key 2: 31888620759167175168678396596793878613351875171100615087168138250147483763099593890866106239014898112804139533361095
+Key 3: 31888620759167175168678396596793878613351875171100615087168138250147483763099593890866106239014898112804139533361095
+Key 4: 31888620759167175168678396596793878613351875171100615087168138250147483763099593890866106239014898112804139533361095
+Key 5: 31888620759167175168678396596793878613351875171100615087168138250147483763099593890866106239014898112804139533361095
+Key generation time for a key size of 384 bits: 0.0021131038665771484 seconds
+
+Measuring key generation time for a key size of 409 bits...
+5 keys generated for a key size of 409 bits:
+Key 1: 447171885566557172677149973308047064759300798878782653255807271363335357811700270486467804494607867789793915679015836704773
+Key 2: 447171885566557172677149973308047064759300798878782653255807271363335357811700270486467804494607867789793915679015836704773
+Key 3: 447171885566557172677149973308047064759300798878782653255807271363335357811700270486467804494607867789793915679015836704773
+Key 4: 447171885566557172677149973308047064759300798878782653255807271363335357811700270486467804494607867789793915679015836704773
+Key 5: 447171885566557172677149973308047064759300798878782653255807271363335357811700270486467804494607867789793915679015836704773
+Key generation time for a key size of 409 bits: 0.002260446548461914 seconds
+
+Measuring key generation time for a key size of 512 bits...
+5 keys generated for a key size of 512 bits:
+Key 1: 3715132764402528317950983803770205771131970988374919524988753798481109138196730275130773041898226059750850264629710387037485064220477922852299293356623851843
+Key 2: 3715132764402528317950983803770205771131970988374919524988753798481109138196730275130773041898226059750850264629710387037485064220477922852299293356623851843
+Key 3: 3715132764402528317950983803770205771131970988374919524988753798481109138196730275130773041898226059750850264629710387037485064220477922852299293356623851843
+Key 4: 3715132764402528317950983803770205771131970988374919524988753798481109138196730275130773041898226059750850264629710387037485064220477922852299293356623851843
+Key 5: 3715132764402528317950983803770205771131970988374919524988753798481109138196730275130773041898226059750850264629710387037485064220477922852299293356623851843
+Key generation time for a key size of 512 bits: 0.0038754940032958984 seconds
+
+Measuring key generation time for a key size of 521 bits...
+5 keys generated for a key size of 521 bits:
+Key 1: 5078363236681489514211773534244647909310275047526581005143259586452306399720416504196106758268800829311864486426800953891590871928543415211188795070087522261
+Key 2: 5078363236681489514211773534244647909310275047526581005143259586452306399720416504196106758268800829311864486426800953891590871928543415211188795070087522261
+Key 3: 5078363236681489514211773534244647909310275047526581005143259586452306399720416504196106758268800829311864486426800953891590871928543415211188795070087522261
+Key 4: 5078363236681489514211773534244647909310275047526581005143259586452306399720416504196106758268800829311864486426800953891590871928543415211188795070087522261
+Key 5: 5078363236681489514211773534244647909310275047526581005143259586452306399720416504196106758268800829311864486426800953891590871928543415211188795070087522261
+Key generation time for a key size of 521 bits: 0.0028455257415771484 seconds
+
+Measuring key generation time for a key size of 571 bits...
+5 keys generated for a key size of 571 bits:
+Key 1: 1828393490180837985166201851581190860476856679470341594518556246930801257063250255415614642884098205911520281450137453108242951780053167123401311801337113262174502351012196
+Key 2: 1828393490180837985166201851581190860476856679470341594518556246930801257063250255415614642884098205911520281450137453108242951780053167123401311801337113262174502351012196
+Key 3: 1828393490180837985166201851581190860476856679470341594518556246930801257063250255415614642884098205911520281450137453108242951780053167123401311801337113262174502351012196
+Key 4: 1828393490180837985166201851581190860476856679470341594518556246930801257063250255415614642884098205911520281450137453108242951780053167123401311801337113262174502351012196
+Key 5: 1828393490180837985166201851581190860476856679470341594518556246930801257063250255415614642884098205911520281450137453108242951780053167123401311801337113262174502351012196
+Key generation time for a key size of 571 bits: 0.0047228336334228516 seconds
+
+Comparison of execution times for different key sizes:
+Execution time for a key size of 256 bits: 0.0 seconds
+Execution time for a key size of 384 bits: 0.0021131038665771484 seconds
+Execution time for a key size of 409 bits: 0.002260446548461914 seconds
+Execution time for a key size of 512 bits: 0.0038754940032958984 seconds
+Execution time for a key size of 521 bits: 0.0028455257415771484 seconds
+Execution time for a key size of 571 bits: 0.0047228336334228516 seconds

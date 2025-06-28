@@ -1,0 +1,93 @@
+C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\Codes python RSA, El-Gamal et ECC avec critères d'évaluation\Codes python ECC avec critères d'évaluation>python Code_Python_ECC_Version_5_Avec_Comparaison_Tailles_Cles.py
+The present Python program will demonstrate the effectiveness of a right implementation of the ECC asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm ECC uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:
+
+a: 256 bits.
+b: 384 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+The standard key sizes and standard message length showed above are used by the ECC asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are not used for specifying the size of the message that must be first encrypted and then decrypted by this ECC asymmetric encryption and decryption algorithm.
+
+The reason of that statement is simple: the ECC assymetric encryption and decryption algorithm only need the key sizes showed above, to encrypt and decrypt either short, medium and long messages, those messages usually have the following standard message lenght:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:
+
+Standard message lenghts:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+Standard key sizes:
+a: 256 bits.
+b: 304 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+For that purpose, please specify and choose a standard message length from the list shown above:
+Enter your choice (a, b, c, d, e, or f): e
+For that purpose, please specify and choose a standard key size from the list shown above:
+Enter your choice (a, b, c, d, e, or f): e
+Enter a message that contains maximum 1024 characters, spaces included: Les défis auxquels l'humanité est confrontée aujourd'hui sont nombreux et complexes. Du changement climatique à la pauvreté mondiale, en passant par les inégalités sociales et la montée du terrorisme, notre monde est confronté à des problèmes urgents qui nécessitent une action immédiate et accordée. Pour surmonter ces défis, il est essentiel que nous travaillions ensemble, en tant que population mondiale, pour trouver des solutions durables. Cela nécessite un engagement ferme en faveur de la coopération internationale, ainsi que des politiques et des actions concrètes pour promouvoir le développement durable, l'égalité et la paix. En unissant nos forces et en mettant en commun nos ressources, l'humanité peut créer un avenir meilleur pour tous, où chaque individu a la chance de réaliser son plein potentiel et de vivre dans un monde sûr, juste et prospère. Cependant, afin que les nations du monde deviennent riches et prospères, on doit éliminer, pour de vrai, la pauvrété mondiale.
+Now that a standard key size and a standanrd message lenght has been chosed by the user, now the ECC assymetric encryption and decryption algorithm needs now to know which elliptic curve will be used, to perform all the process associated to this ECC assymetric algorithm, like the creation of public and private keys, the creation of shared keys and the encryption and decryption of messages.
+In order to encrypt and decrypt clear and plain messages, the ECC assymetric encryption and decryption algorithm, implemented by the present program, needs to take one of the following elliptic curves, among an immense range of options determined by international organisations:
+a: SECP256R1.
+b: SECP384R1.
+c: SECT409R1.
+d: BrainpooolP512R1.
+e: SECP521R1.
+f: SECT571K1.
+
+For that purpose, please specify and choose an elliptic curve using the standard key size chosen above, from the list shown above:
+Enter your choice (a, b, c, d, e, or f): e
+
+Clear Message :
+Les défis auxquels l'humanité est confrontée aujourd'hui sont nombreux et complexes. Du changement climatique à la pauvreté mondiale, en passant par les inégalités sociales et la montée du terrorisme, notre monde est confronté à des problèmes urgents qui nécessitent une action immédiate et accordée. Pour surmonter ces défis, il est essentiel que nous travaillions ensemble, en tant que population mondiale, pour trouver des solutions durables. Cela nécessite un engagement ferme en faveur de la coopération internationale, ainsi que des politiques et des actions concrètes pour promouvoir le développement durable, l'égalité et la paix. En unissant nos forces et en mettant en commun nos ressources, l'humanité peut créer un avenir meilleur pour tous, où chaque individu a la chance de réaliser son plein potentiel et de vivre dans un monde sûr, juste et prospère. Cependant, afin que les nations du monde deviennent riches et prospères, on doit éliminer, pour de vrai, la pauvrété mondiale.
+
+ECC Private Key:
+5751312569615218461456040769754375260151792514946641546105391888092606243358053344782890877039742664605612113548606217998995307722365133365385994369908288401
+
+ECC Public Key :
+6468304534334868009587382805471279693625730565296508689714728943101454727553938112384889108939875386638572157777748184998743680886902169486618200502750056857
+
+Ciphertext pubKey:
+40d3b4b7c771907e4380fd51a56fc4c3a0c8d64c1204fb879db1616c61baaf00
+
+Encryption Key:
+40d3b4b7c771907e4380fd51a56fc4c3a0c8d64c1204fb879db1616c61baaf00
+
+Decryption Key:
+40d3b4b7c771907e4380fd51a56fc4c3a0c8d64c1204fb879db1616c61baaf00
+
+Encrypted Message:
+{'ciphertext': '2b33d416d44d5f2a1c4861c8ca5e8e51721128e3c6955c17bdda6c8ab87c4f8f18152fbd4a0a8857d943cbf6d232b72d88a040672aeee5b201c44c61696ac90d210f8336c042e653c683d15b22d62010201577461e496aa0541f5cb441d1f3fbeab3dd76ca9ff6e95c7d9ee7673f2ee45d45ae920dbc3e0fb9431f1d939c7b5d695d63d608b1dcad65215d6e2202dfb3b317d1a85800daf230cf8e60020b6d24c72d19a30b2f5fe9d23e106ae71a7d80bada49b674cead5bc635bf76e9859fbd64232c0765ebf9ccc2d61ee4aa048b2596d5e0abb894cb9a8998c0554c45508dcb8494a9d9ec1535129988e9008e1e8a6f5b37a3fd71326a9fae813c34f241ee7245edb3fa69ee6168e0511f247a23aff80a5ac3df6e85bee0fb71b065564f19e10e29672c44674c41cedec30727afa6b67338c2583760d892615376cdc7efc539747925b9085d704b4ef36c65fa0eca22d5a82776b5b4b87a451bcb7ecad6e61280a759e6639f1f859fbd7d6213f0d24da34d886fd3474cb210c1ce5007edc246c1cdfffe276c6f3595100e2f2b9e03aea596b5ad3ea533a64c1039ffc553f206cd255564b43b7f21c4c5e80c2b7c262dd449430543f79118aad4bb163c8866067e3c254655f012a0324e922da1c824a08ca3dfd46fa5c3a1ffb977fb81aecb277ccfe309979aa43feab330aac35c0ed531f143377ece5fbc310f66c92b64563793119ca47443a461021251ef7f411fc4bdabe194c737da82530f374248b6670e126d3d80246f003de57b8c95c582394ae7befe6d3cd819c23aeee8d725a75fa17a266a0e0d2e414e603e25e62f671a0428b52a2297e66f178b74b773f393a884d3a6b7979510207bf7451c83efaa27e0bad1550db133ace53aa6865509c76b6ece5a0b05d8072d54e4b3d8d48f448f95b61b567d65ec987bffd411f36dfd406d07864f8d075868ea1170a3869826eb0163cc632a8833e398663b091209d5bc132030bec12a74077bc3f5ce6dd22701e60fdba2f47a45679d8091e964a5d11d5e8950918b620bea4b67befe5c3e3a0d0a70ea4e4447ef44734cb9703c343dbe0b048741a18de4471b5f5b7dcad478a2b36b1f8b8e70d536881f587f6068be55d0bd7a083bb59c3065ae55a1d49113b1794dffa2d2def4a844a5da1fc9f16164734335d564b1fc276e8b9f048850c842de592bf4ae005d0897ea145e55ae6c6bfdc0ada5eca5f46d2ab9cd0fbd0a622449ff85add3a5801aacfef43b4887ffa022e754cb17dc36e4e809ebf5137d278deb0e54ff129c7a0f7281eec7885ad4fa70adb6bdb7b9524bd8adfcde978c0efb553569e1ba11d8186871c7fccac90cb6ef6e0bff8144ace3e1390dd39fe88984cd5b06989b58a45b8b7bd1da9554bc88a0baa43caf58551d779e88289463c41df2425ee9cf1b909ba65d24d8444b4458', 'nonce': '39237efde6552d048bb5a711a1d95c08', 'authTag': '4de62bac5cd0f43f7588aef4ab3bef4d', 'ciphertextPubKey': (6468304534334868009587382805471279693625730565296508689714728943101454727553938112384889108939875386638572157777748184998743680886902169486618200502750056857, 6826320548248913414808723629901872535228824047405897774168809141633536286344334480500603707708858718935191934278438572400189268605230939966187567792983860498)}
+
+Decrypted Message:
+Les défis auxquels l'humanité est confrontée aujourd'hui sont nombreux et complexes. Du changement climatique à la pauvreté mondiale, en passant par les inégalités sociales et la montée du terrorisme, notre monde est confronté à des problèmes urgents qui nécessitent une action immédiate et accordée. Pour surmonter ces défis, il est essentiel que nous travaillions ensemble, en tant que population mondiale, pour trouver des solutions durables. Cela nécessite un engagement ferme en faveur de la coopération internationale, ainsi que des politiques et des actions concrètes pour promouvoir le développement durable, l'égalité et la paix. En unissant nos forces et en mettant en commun nos ressources, l'humanité peut créer un avenir meilleur pour tous, où chaque individu a la chance de réaliser son plein potentiel et de vivre dans un monde sûr, juste et prospère. Cependant, afin que les nations du monde deviennent riches et prospères, on doit éliminer, pour de vrai, la pauvrété mondiale.
+
+Size of the public key: 521 bits
+Size of the private key: 521 bits
+
+The size of the public key is equal to the size of the private key.
+
+Complexity of the public key generation, for encrypting clear messages:
+Time taken: 0.00137138 seconds
+Memory used: 12.00000000 KB
+
+Complexity of the private key generation, for decrypting encrypted messages:
+Time taken: 0.00267005 seconds
+Memory used: 0.00000001 KB
+
+Note: j'ai éliminé, beaucoup avant la compilation du présent code python ECC, l'ensemble de tous les logs qu'avait mon laptop personnel!!!

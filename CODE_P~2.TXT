@@ -1,0 +1,79 @@
+C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\Codes python RSA, El-Gamal et ECC avec critères d'évaluation\Codes python ECC avec critères d'évaluation>python Code_Python_ECC_Version_5_Avec_Utilisation_Memoire.py
+The present Python program will demonstrate the effectiveness of a right implementation of the ECC asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm ECC uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:
+
+a: 256 bits.
+b: 384 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+The standard key sizes and standard message length showed above are used by the ECC asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are not used for specifying the size of the message that must be first encrypted and then decrypted by this ECC asymmetric encryption and decryption algorithm.
+
+The reason of that statement is simple: the ECC assymetric encryption and decryption algorithm only need the key sizes showed above, to encrypt and decrypt either short, medium and long messages, those messages usually have the following standard message lenght:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:
+
+Standard message lenghts:
+a: 2048 bits.
+b: 3072 bits.
+c: 4096 bits.
+d: 6144 bits.
+e: 8192 bits.
+f: 16384 bits.
+
+Standard key sizes:
+a: 256 bits.
+b: 304 bits.
+c: 409 bits.
+d: 512 bits.
+e: 521 bits.
+f: 571 bits.
+
+For that purpose, please specify and choose a standard message length from the list shown above:
+Enter your choice (a, b, c, d, e, or f): c
+For that purpose, please specify and choose a standard key size from the list shown above:
+Enter your choice (a, b, c, d, e, or f): c
+Enter a message that contains maximum 512 characters, spaces included: In football, players who honour the sport possess exceptional mental fortitude and a winning mindset. Whether on the field or off, they show out resilience and determination to excel and overcome challenges. Moreover, those players excel as parents, setting positive examples. They embody the true spirit of the game, inspiring other people with dedication, leadership, and passion. Their influence extends beyond the field, shaping the culture and instilling values of teamwork, perseverance, and sportsmanship.
+Now that a standard key size and a standanrd message lenght has been chosed by the user, now the ECC assymetric encryption and decryption algorithm needs now to know which elliptic curve will be used, to perform all the process associated to this ECC assymetric algorithm, like the creation of public and private keys, the creation of shared keys and the encryption and decryption of messages.
+In order to encrypt and decrypt clear and plain messages, the ECC assymetric encryption and decryption algorithm, implemented by the present program, needs to take one of the following elliptic curves, among an immense range of options determined by international organisations:
+a: SECP256R1.
+b: SECP384R1.
+c: SECT409R1.
+d: BrainpooolP512R1.
+e: SECP521R1.
+f: SECT571K1.
+
+For that purpose, please specify and choose an elliptic curve using the standard key size chosen above, from the list shown above:
+Enter your choice (a, b, c, d, e, or f): c
+
+Clear Message :
+In football, players who honour the sport possess exceptional mental fortitude and a winning mindset. Whether on the field or off, they show out resilience and determination to excel and overcome challenges. Moreover, those players excel as parents, setting positive examples. They embody the true spirit of the game, inspiring other people with dedication, leadership, and passion. Their influence extends beyond the field, shaping the culture and instilling values of teamwork, perseverance, and sportsmanship.
+
+ECC Private Key:
+406903853478468337927500543860333868280425451753795998377800207635138762084586064065956748609907434494342341142266987659502
+
+ECC Public Key :
+940369344327060707008087515224167005097946174740520539701659997753111558571060539623759216050941781593750093194190792528085
+
+Ciphertext pubKey:
+c6ddd6f1d92a8d0dc41b71a012340cbc40d7753b4d80bd58ddaf66028f56db25
+
+Encryption Key:
+c6ddd6f1d92a8d0dc41b71a012340cbc40d7753b4d80bd58ddaf66028f56db25
+
+Decryption Key:
+c6ddd6f1d92a8d0dc41b71a012340cbc40d7753b4d80bd58ddaf66028f56db25
+
+Encrypted Message:
+{'ciphertext': '242c12759e750b1df2470fd9bcb25cfeaedadf045ef3e2e9ccaad7ab1c945ba524e7e74811f9bbf1040356b055df612057373d5ecfd608e5de99e2abc151ab856ae9ccfc3e19c650c4a5cec4fdfab12c2a17eb8a1d23f2727d8084f8ee8e13a5ef59f909cee4c303075dad66fb15edac0e751113416e317e52b93cfb5b1ee5d53eff43435b40ebb159136458e3f32ab8668fbd4aaf46c7bf52dd26407008b186e73b05fb7c57d1da7e58c6625818893c38361bac7514ac221eff4e5f24021644780ab19077401634ef2d0718356ca817924025e914ab34fa2f066ed92bbbeb71383ffeed4021758570e882e82a5b0f4f99a0c297ae8a2afd655c7dfc6d236f09cc7ba144c4f337fe5258bdb5418f2f1240396cf3f6821b2731c20fd32c8539145ffedd99fdf94459bb55f4669461fa2d3921b27bfaed78cb76f52e7c69fe14b6f6932ae65e50ad99b76b3899b37c2fd2592041c9b270e5f16b7cd8be328ed0ffdbcf3610e37140bf58ece80de711422f32b413c4b356af99f2673d684ec93aa39376bce233b6eaf6941deb5b0ef09514f8d36807d82afc25e903e18861b6a276a208e81a7b32677eff7fa9995d52aa50eb3c1f6131bb861008a834d7a11b42962271239bf22f9b92cec5aef797af9ea1d51846a9b07d1932856d4c20d99e13f794389ce89a61996cc410880c42ab4adaaf694a40f71482f175ec9ddba003fe06', 'nonce': '94cc1e1338f6adfa4727861713fc9e84', 'authTag': '3afab19a5d27b9d8b0f5bca3647c1232', 'ciphertextPubKey': (940369344327060707008087515224167005097946174740520539701659997753111558571060539623759216050941781593750093194190792528085, 44928051072071904694544758748003761198843949750053932386173671850742842586117667610963380339342089130045142461106541824821)}
+
+Decrypted Message:
+In football, players who honour the sport possess exceptional mental fortitude and a winning mindset. Whether on the field or off, they show out resilience and determination to excel and overcome challenges. Moreover, those players excel as parents, setting positive examples. They embody the true spirit of the game, inspiring other people with dedication, leadership, and passion. Their influence extends beyond the field, shaping the culture and instilling values of teamwork, perseverance, and sportsmanship.
+Memory used : 4364.0 kilobytes
