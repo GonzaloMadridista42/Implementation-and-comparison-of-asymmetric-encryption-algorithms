@@ -271,8 +271,21 @@ def measure_decryption(encrypted_message, private_key):
     end_time = time.time()
     return end_time - start_time
 
+# Function to generate a message of a given length
+def generate_message(user_response_message_length):
+    return ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') for _ in range(user_response_message_length))
+
+# Function to generate 5 messages of the same length as the provided plaintext message
+def generate_test_messages(message, num_messages):
+    return [generate_message(len(message)) for _ in range(num_messages)]
+
+# Function to measure memory usage
+def measure_memory_usage():
+    process = psutil.Process()
+    return process.memory_info().rss / 1024  # Convert to kilobytes
+
 if __name__ == '__main__':
-    # Code block that measures the algorithmic complexity of the keys generated and the encryption and decryption process provided by the Python code implementing the RSA algorithm 
+    # Code block that measures the algorithmic complexity of the keys generated and the encryption and decryption process, used to handle a big quantitiy of data (large messages) provided by the Python code implementing the RSA algorithm
     # Check if keys have already been generated
     if 'public_key' not in globals() or 'private_key' not in globals():
         # If keys have not been generated, generate a new key pair
@@ -294,26 +307,155 @@ if __name__ == '__main__':
         print("Time taken:", key_gen_time_str, "seconds")
         print("Memory used:", key_gen_memory_str, "KB")
 
+    # Generate a plaintext message
+    plaintext_message = "The challenges facing humanity today are numerous and complex. From climate change to global poverty, to social inequalities and the rise of terrorism, our world is confronted with urgent problems that require immediate and concerted action. To overcome these challenges, it is essential that we work together, as a global population, to find sustainable solutions. This requires a firm commitment to international cooperation, as well as concrete policies and actions to promote sustainable development, equality, and peace. By joining forces and pooling our resources, humanity can create a better future for all, where each individual has the opportunity to realize their full potential and live in a safe, just, and prosperous world. However, for the nations of the world to become rich and prosperous, global poverty must be eradicated for real."
+    
+    # Use plain text message to generate test messages
+    test_messages = generate_test_messages(plaintext_message, 5)
+
+    # Measure memory usage for generating test messages
+    memory_used = measure_memory_usage()
+    print("\nMemory used for generating test messages:", "{:.8f}".format(memory_used), "KB")
+
+    # Measure encryption complexity for each test message
+    print("\nMeasuring encryption complexity for each test message...")
+    encryption_times = []  # Store encryption times for each message
+    encrypted_messages = []  # Store encrypted messages for each message
+    encoding_memory_used = []  # Store memory usage during encoding for each message
+    encryption_memory_used_list = []  # Store memory usage during encryption for each message
+
+    for i, message in enumerate(test_messages):
+        # Encode the message
+        encoded_message = encode_message(message)
+    
+        # Measure memory usage during encoding
+        encoding_memory_used_value = measure_memory_usage()
+        encoding_memory_used.append(encoding_memory_used_value)
+
+        # Encrypt the message
+        encryption_start_time = time.time()
+        encrypted_message = [encrypt(char, public_key) for char in encoded_message]
+        encryption_end_time = time.time()
+        encryption_time = encryption_end_time - encryption_start_time
+        encryption_times.append(encryption_time)
+        encrypted_messages.append(encrypted_message)
+
+        # Measure memory usage during encryption
+        encryption_memory_used_value = measure_memory_usage()
+        encryption_memory_used_list.append(encryption_memory_used_value)
+
+        # Display information
+        print(f"Message {i+1}:")
+        print("Clear message:", message)
+        print("Encrypted message:", encrypted_message)
+        print(f"Encryption time for message {i+1}: {encryption_time:.8f} seconds")
+        print("Memory used during encoding:", "{:.8f}".format(encoding_memory_used_value), "KB")
+        print("Memory used during encryption:", "{:.8f}".format(encryption_memory_used_value), "KB")
+
+    # Calculate average encryption time
+    average_encryption_time = sum(encryption_times) / len(encryption_times)
+    print("\nAverage encryption time:", "{:.8f}".format(average_encryption_time), "seconds")
+
+    # Calculate average encoding time
+    average_encoding_time = sum(encryption_times) / len(encryption_times)
+    print("Average encoding time:", "{:.8f}".format(average_encoding_time), "seconds")
+
+    # Calculate average memory used during encryption
+    average_encryption_memory = sum(encryption_memory_used_list) / len(encryption_memory_used_list)
+    print("Average memory used during encryption:", "{:.8f}".format(average_encryption_memory), "KB")
+
+    # Calculate average memory used during encoding
+    average_encoding_memory = sum(encoding_memory_used) / len(encoding_memory_used)
+    print("Average memory used during encoding:", "{:.8f}".format(average_encoding_memory), "KB")
+
+    # Measure decryption complexity for each test message
+    print("\nMeasuring decryption complexity for each test message...")
+    decryption_times = []  # Store decryption times for each message
+    decrypted_messages = []  # Store decrypted messages for each message
+    decoding_memory_used = []  # Store memory usage during decoding for each message
+    decryption_memory_used_list = []  # Store memory usage during decryption for each message
+
+    for i, encrypted_message in enumerate(encrypted_messages):
+        # Decrypt the message
+        decryption_start_time = time.time()
+        decrypted_message = [decrypt(char, private_key) for char in encrypted_message]
+        decryption_end_time = time.time()
+        decryption_time = decryption_end_time - decryption_start_time
+        decryption_times.append(decryption_time)
+        decrypted_messages.append(decrypted_message)
+
+        # Measure memory usage during decryption
+        decryption_memory_used_value = measure_memory_usage()
+        decryption_memory_used_list.append(decryption_memory_used_value)
+
+        # Measure memory usage during decoding
+        decoding_memory_used_value = measure_memory_usage()
+        decoding_memory_used.append(decoding_memory_used_value)
+
+        # Display information
+        print(f"Message {i+1}:")
+        print("Encrypted message:", encrypted_message)
+        decrypted_message_text = ''.join([chr(char) if char < 1114111 else '?' for char in decrypted_message])
+        print("Decrypted message:", decrypted_message_text)
+        print(f"Decryption time for message {i+1}: {decryption_time:.8f} seconds")
+        print("Memory used during decryption:", "{:.8f}".format(decryption_memory_used_value), "KB")
+        print("Memory used during decoding:", "{:.8f}".format(decoding_memory_used_value), "KB")
+
+    # Calculate average decryption time
+    average_decryption_time = sum(decryption_times) / len(decryption_times)
+    print("\nAverage decryption time:", "{:.8f}".format(average_decryption_time), "seconds")
+
+    # Calculate average decoding time
+    average_decoding_time = sum(decryption_times) / len(decryption_times)
+    print("Average decoding time:", "{:.8f}".format(average_decoding_time), "seconds")
+
+    # Calculate average memory used during decryption
+    average_decryption_memory = sum(decryption_memory_used_list) / len(decryption_memory_used_list)
+    print("Average memory used during decryption:", "{:.8f}".format(average_decryption_memory), "KB")
+
+    # Calculate average memory used during decoding
+    average_decoding_memory = sum(decoding_memory_used) / len(decoding_memory_used)
+    print("Average memory used during decoding:", "{:.8f}".format(average_decoding_memory), "KB")
+
+    # Generate test message for encoding and decoding
+    test_message = generate_message(user_response_message_length)
+
+    # Measure encoding complexity
+    print("\nMeasuring encoding complexity...")
+    encoding_start_time = time.time()
+    encoded_message = encode_message(test_message)
+    encoding_end_time = time.time()
+    encoding_time = encoding_end_time - encoding_start_time
+    encoding_memory_used = measure_memory_usage() # Measure memory usage during encoding
+    print("Encoding time:", "{:.8f}".format(encoding_time), "seconds")
+    print("Memory used during encoding:", "{:.8f}".format(encoding_memory_used), "KB")
+
+    # Measure decoding complexity
+    print("\nMeasuring decoding complexity...")
+    decoding_start_time = time.time()
+    decoded_message = decode_message(encoded_message)
+    decoding_end_time = time.time()
+    decoding_time = decoding_end_time - decoding_start_time
+    decoding_memory_used = measure_memory_usage() # Measure memory usage during decoding
+    print("Decoding time:", "{:.8f}".format(decoding_time), "seconds")
+    print("Memory used during decoding:", "{:.8f}".format(decoding_memory_used), "KB")
+
     # Measure encryption complexity
     print("\nMeasuring encryption complexity...")
-    encrypted_time = measure_encryption(123456, public_key)
-
-    # Measure memory usage during encryption
-    encryption_memory_used = get_memory_usage()
-
-    # Ensure non-zero value for encryption time
-    encrypted_time_str = "{:.8f}".format(max(0.00000001, encrypted_time))
-    print("Encryption time:", encrypted_time_str, "seconds")
+    encryption_start_time = time.time()
+    encrypted_message = [encrypt(char, public_key) for char in encoded_message]
+    encryption_end_time = time.time()
+    encryption_time = encryption_end_time - encryption_start_time
+    encryption_memory_used = measure_memory_usage() # Measure memory usage during encryption
+    print("Encryption time:", "{:.8f}".format(encryption_time), "seconds")
     print("Memory used during encryption:", "{:.8f}".format(encryption_memory_used), "KB")
-
+    
     # Measure decryption complexity
     print("\nMeasuring decryption complexity...")
-    decrypted_time = measure_decryption(encrypted_time, private_key)
-
-    # Measure memory usage during decryption
-    decryption_memory_used = get_memory_usage()
-
-    # Ensure non-zero value for decryption time
-    decrypted_time_str = "{:.8f}".format(max(0.00000001, decrypted_time))
-    print("Decryption time:", decrypted_time_str, "seconds")
+    decryption_start_time = time.time()
+    decrypted_message = [decrypt(char, private_key) for char in encrypted_message]
+    decryption_end_time = time.time()
+    decryption_time = decryption_end_time - decryption_start_time
+    decryption_memory_used = measure_memory_usage() # Measure memory usage during decryption
+    print("Decryption time:", "{:.8f}".format(decryption_time), "seconds")
     print("Memory used during decryption:", "{:.8f}".format(decryption_memory_used), "KB")
