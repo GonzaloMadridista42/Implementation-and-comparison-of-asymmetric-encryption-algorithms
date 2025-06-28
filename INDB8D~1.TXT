@@ -6,9 +6,20 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import ecdsa
 import os
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 
 # importing the psutil library to measure the memory consumption that takes the RSA python code, to perform key generation, encoding and decoding of messages
 import psutil
+
+# importing the time library to measure the time that takes the RSA oython code, to perform key generation, encoding and decoding of messages
+import time
+
+# Importing the math library to calculate the size of the generated public and private ECC keys
+import math
+
+# Importing the string library to o generate a message of a given length, generate randomly 5 messages of that given length, and measure the memory used those two generation process
+import string
 
 # Function to measure memory usage
 def get_memory_usage():
@@ -18,15 +29,20 @@ def get_memory_usage():
 # Example of using the function
 before_memory = get_memory_usage()
 
-# Generate an ECC key pair
+# Function to generate the public and the private keys, for encryption and decryption of messages
 def generate_ecc_key_pair(curve):
     private_key = ec.generate_private_key(curve, default_backend())
     public_key = private_key.public_key()
-    return private_key, public_key
+    # Calculate key sizes
+    public_key_size = public_key.public_numbers().x.bit_length()
+    private_key_size = private_key.private_numbers().private_value.bit_length()
+    return private_key, public_key, public_key_size, private_key_size
 
 # Calculate ECC shared secret
 def calculate_shared_secret(private_key, public_key):
     shared_secret = private_key.exchange(ec.ECDH(), public_key)
+    # Calculate shared secret size
+    shared_secret_size = len(shared_secret) * 8  # Convert bytes to bits    
     return shared_secret
 
 # Generate a derived secret key from the shared secret
@@ -38,7 +54,9 @@ def derive_secret_key(shared_secret, length):
         info=b'ECC Key Derivation',
         backend=default_backend()
     ).derive(shared_secret)
-    return derived_key
+    # Calculate derived key size
+    derived_key_size = len(derived_key) * 8  # Convert bytes to bits    
+    return derived_key  
 
 # Encrypt a message with AES-GCM
 def encrypt_message_AES_GCM(message, key):
@@ -81,7 +99,6 @@ print("c: 4096 bits.")
 print("d: 6144 bits.")
 print("e: 8192 bits.")
 print("f: 16384 bits.\n")
-
 
 print("That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:\n")
 
@@ -222,7 +239,10 @@ while True:
         user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
 
 # Generate an ECC key pair
-private_key, public_key = generate_ecc_key_pair(user_response_elliptic_curve)
+before_memory = get_memory_usage()
+private_key, public_key, public_key_size, private_key_size = generate_ecc_key_pair(user_response_elliptic_curve)
+after_memory = get_memory_usage()
+memory_used = after_memory - before_memory
 
 # Display information
 print("\nClear Message :")
@@ -273,6 +293,125 @@ print(decrypted_message.decode('utf-8'))
 after_memory = get_memory_usage()
 memory_used = after_memory - before_memory
 
+# Measurement of key generation complexity
+def measure_key_generation(curve):
+    start_memory = get_memory_usage()
+    start_time = time.time()
+    generate_ecc_key_pair(curve)
+    end_time = time.time()
+    end_memory = get_memory_usage()
+    return end_time - start_time, end_memory - start_memory
+
+# Measurement of encryption complexity
+def measure_encryption(msg, derived_key):
+    start_time = time.time()
+    encrypt_message_AES_GCM(msg, derived_key)
+    end_time = time.time()
+    return end_time - start_time
+
+# Measurement of decryption complexity
+def measure_decryption(ciphertext, iv, tag, derived_key):
+    start_time = time.time()
+    decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+    end_time = time.time()
+    return end_time - start_time
+
+# Function to generate a message of a given length
+def generate_message(user_response_message_length):
+    return ''.join(string.ascii_letters[i % len(string.ascii_letters)] for i in range(user_response_message_length))
+
+# Function to generate 5 messages of the same length as the provided plaintext message
+def generate_test_messages(message, num_messages):
+    return [generate_message(len(message)) for _ in range(num_messages)]
+
+# Function to measure memory usage
+def measure_memory_usage():
+    process = psutil.Process()
+    return process.memory_info().rss / 1024  # Convert to kilobytes
+
+def map_key_size_to_curve(key_size):
+    if key_size == 256:
+        return ec.SECP256R1()
+    elif key_size == 384:
+        return ec.SECP384R1()
+    elif key_size == 409:
+        return ec.SECT409R1()
+    elif key_size == 512:
+        return ec.SECP521R1()  # Note: Change this to ec.BrainpoolP512R1() if needed
+    elif key_size == 521:
+        return ec.SECP521R1()
+    elif key_size == 571:
+        return ec.SECT571K1()
+    else:
+        raise ValueError("Invalid key size")
+
+# Function to measure memory usage
+def measure_memory_usage():
+    process = psutil.Process()
+    memory_usage_kb = process.memory_info().rss / 1024  # Convert to kilobytes
+    if memory_usage_kb < 0.001:  # If memory usage is very low
+        return 0.0000001  # Display a value very close to zero
+    else:
+        return memory_usage_kb
+
 if __name__ == '__main__':
-    # Code block that measures the memory consumption of the python code implementing the RSA algorithm 
-    print("Memory used :", memory_used, "kilobytes")   
+    # Code block that measures the the size of clear and plain messages used for generating public and private keys, encryption and decryption of those clear and plain messages performed by the Ecc algorithm, in order to well maintain the cybersecurity of the encrypted and decrypted messages generated by that ECC algorithm
+    # Table containing the clear messages
+    clear_messages = [
+        "La felicidad es un estado del alma que se alimenta de momentos de gratitud y amor. Es encontrar belleza en lo simple, apreciar lo que tenemos y ser conscientes de lo que nos rodea. En cada sonrisa, en cada beso, en cada alba, la felicidad se hace presente.",
+        "In football, the best players that highten the most that sport are the players who have the best mentality and attitude, either when they play football in the pitch, either they are outside the pitch, and they always will show the best attitude and mentality to overcome all the obstacles they may encounter in real life and when playing football. Those players are also good parents.",
+        "In football, players who honour the sport possess exceptional mental fortitude and a winning mindset. Whether on the field or off, they show out resilience and determination to excel and overcome challenges. Moreover, those players excel as parents, setting positive examples. They embody the true spirit of the game, inspiring other people with dedication, leadership, and passion. Their influence extends beyond the field, shaping the culture and instilling values of teamwork, perseverance, and sportsmanship.",
+        "Dans le domaine médical, les professionnels dédient leur vie au bien-être. Dans les hôpitaux, cliniques ou sur le terrain, ils font preuve de compassion et de compétence pour soigner et sauver des vies. Ces héros inspirent confiance et espoir, guidant les patients avec empathie. Leur impact transcende les frontières de la maladie, apportant guérison et réconfort à ceux qui en ont besoin. Médecins, infirmières et professionnels consacrent temps et énergie à améliorer la vie des autres, avec un altruisme admirable et un engagement incéssant envers la société. Il est clair que les sociétés du monde ont besoin des professionnels de la santé, donc on doit toujours valoriser et féliciter le travail qu'ils réalisent en faveur de notre santé.",
+        "Les défis auxquels l'humanité est confrontée aujourd'hui sont nombreux et complexes. Du changement climatique à la pauvreté mondiale, en passant par les inégalités sociales et la montée du terrorisme, notre monde est confronté à des problèmes urgents qui nécessitent une action immédiate et accordée. Pour surmonter ces défis, il est essentiel que nous travaillions ensemble, en tant que population mondiale, pour trouver des solutions durables. Cela nécessite un engagement ferme en faveur de la coopération internationale, ainsi que des politiques et des actions concrètes pour promouvoir le développement durable, l'égalité et la paix. En unissant nos forces et en mettant en commun nos ressources, l'humanité peut créer un avenir meilleur pour tous, où chaque individu a la chance de réaliser son plein potentiel et de vivre dans un monde sûr, juste et prospère. Cependant, afin que les nations du monde deviennent riches et prospères, on doit éliminer, pour de vrai, la pauvrété mondiale.",
+        "Dans l'ombre de la nuit, les espions se déplacent silencieusement, tissant leur toile d'intrigues et de mystères. Leurs pas si feutrés résonnent à peine dans les rues désertes, tandis qu'ils s'engagent dans une mission secrète de trop d'importance. Leurs oreilles sont tendues, captant le moindre murmure, le moindre indice qui pourrait les guider vers la vérité. Leurs yeux scrutent l'obscurité, cherchant les signes d'un ennemi ou d'un danger imminent.Chaque geste est calculé, chaque mouvement mesuré, car la moindre erreur pourrait avoir des conséquences catastrophiques. Au cœur de la clandestinité, les agents se frayaient un chemin à travers un réseau complexe de mensonges. Leurs identités sont cachées derrière des masques de déguisement sophistiqués, leurs intentions dissimulées derrière des façades impeccables. Chaque rencontre est un jeu de poker mortel, où la moindre faiblesse peut être exploitée pour obtenir des informations vitales. Mais malgré les risques, ils continuent à avancer, motivés par un sens du devoir inébranlable et une loyauté sans faille envers leur pays. Dans les couloirs des agences de renseignement, les analystes travaillent sans relâche pour décoder les messages codés, suivre les traces numériques et identifier les menaces émergentes. Leurs ordinateurs éclairent la nuit, leurs doigts dansants sur les claviers alors qu'ils traquent les ennemis invisibles qui cherchent à semer le chaos et la destruction.Leurs esprits sont aiguisés comme des lames, leur détermination inébranlable face à l'adversité, et dans l'ombre, les espions continuent leur ballet mortel, naviguant à travers un monde de mensonges et de secrets, toujours prêts à sacrifier leur vie pour la sécurité de leur nation. Car dans le jeu de l'espionnage, il n'y a pas de place pour l'erreur, seulement pour la victoire ou la défaite, la vie ou la mort. Le thème des espions est très populaire depuis longtemps, que des jeux vidéo sur le fameux espion James Bond ont été développés."
+    ]
+
+    for message in clear_messages:
+        print("\nClear Message:")
+        print(message)
+        
+        # Encrypt the message with AES-GCM
+        ciphertext, iv, tag = encrypt_message_AES_GCM(message, derived_key)
+
+        encrypted_message = {
+            'ciphertext': ciphertext.hex(),
+            'nonce': iv.hex(),
+            'authTag': tag.hex(),
+            'ciphertextPubKey': (public_key.public_numbers().x, public_key.public_numbers().y)
+        }
+
+        # Display the encrypted message
+        print("\nEncrypted Message:")
+        print(encrypted_message)
+
+        # Decrypt the message with AES-GCM
+        decrypted_message = decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+       
+        # Display the decrypted message
+        print("\nDecrypted Message:")
+        print(decrypted_message.decode('utf-8'))
+        
+        print("Size of the clear message (in characters):", len(message))
+        print("Size of the clear message (in bytes):", len(message.encode('utf-8')))
+
+        # Generate an ECC key pair
+        private_key, public_key, public_key_size, private_key_size = generate_ecc_key_pair(user_response_elliptic_curve)
+
+        print("\nSize of public key (in bits):", public_key_size)
+        print("Size of private key (in bits):", private_key_size)
+
+        # Calculate the shared secret
+        shared_secret = calculate_shared_secret(private_key, public_key)
+
+        # Derivation of the secret key
+        derived_key = derive_secret_key(shared_secret, 32)  # Clé AES 256 bits
+
+        
+
+        print("\nSize of the encrypted message (in characters):", len(encrypted_message))
+        print("Size of the encrypted message (in bytes):", len(str(encrypted_message).encode('utf-8')))
+
+        
+        print("\nSize of the decrypted message (in characters):", len(decrypted_message.decode('utf-8')))
+        print("Size of the decrypted message (in bytes):", len(decrypted_message))
+        

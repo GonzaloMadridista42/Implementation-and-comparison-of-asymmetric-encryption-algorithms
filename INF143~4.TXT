@@ -10,6 +10,12 @@ import os
 # importing the psutil library to measure the memory consumption that takes the RSA python code, to perform key generation, encoding and decoding of messages
 import psutil
 
+# importing the time library to measure the time that takes the RSA oython code, to perform key generation, encoding and decoding of messages
+import time
+
+# Importing the math library to calculate the size of the generated public and private ECC keys
+import math
+
 # Function to measure memory usage
 def get_memory_usage():
     process = psutil.Process()
@@ -222,7 +228,10 @@ while True:
         user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
 
 # Generate an ECC key pair
+before_memory = get_memory_usage()
 private_key, public_key = generate_ecc_key_pair(user_response_elliptic_curve)
+after_memory = get_memory_usage()
+memory_used = after_memory - before_memory
 
 # Display information
 print("\nClear Message :")
@@ -273,6 +282,71 @@ print(decrypted_message.decode('utf-8'))
 after_memory = get_memory_usage()
 memory_used = after_memory - before_memory
 
+# Measurement of key generation complexity
+def measure_key_generation(curve):
+    start_memory = get_memory_usage()
+    start_time = time.time()
+    generate_ecc_key_pair(curve)
+    end_time = time.time()
+    end_memory = get_memory_usage()
+    return end_time - start_time, end_memory - start_memory
+
+# Measurement of encryption complexity
+def measure_encryption(msg, derived_key):
+    start_time = time.time()
+    encrypt_message_AES_GCM(msg, derived_key)
+    end_time = time.time()
+    return end_time - start_time
+
+# Measurement of decryption complexity
+def measure_decryption(ciphertext, iv, tag, derived_key):
+    start_time = time.time()
+    decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+    end_time = time.time()
+    return end_time - start_time
+
 if __name__ == '__main__':
-    # Code block that measures the memory consumption of the python code implementing the RSA algorithm 
-    print("Memory used :", memory_used, "kilobytes")   
+    # Code block that measures the algorithmic complexity of the keys generated and the encryption and decryption process provided by the Python code implementing the El-Gamal algorithm 
+    # Check if keys have already been generated
+    if 'public_key' not in globals() or 'private_key' not in globals():
+        # If keys have not been generated, generate a new key pair
+        before_memory = get_memory_usage()
+        private_key, public_key = generate_ecc_key_pair(user_response_elliptic_curve)
+        after_memory = get_memory_usage()
+        memory_used = after_memory - before_memory
+    else:
+        # If keys already exist, retrieve the existing keys
+        pass
+
+    # Measure key generation complexity
+    key_gen_time, key_gen_memory = measure_key_generation(user_response_elliptic_curve)
+
+    # Ensure non-zero values for key generation complexity
+    key_gen_time_str = "{:.8f}".format(max(0.00000001, key_gen_time))
+    key_gen_memory_str = "{:.8f}".format(max(0.00000001, key_gen_memory))
+
+    print("\nComplexity of key generation:")
+    print("Time taken:", key_gen_time_str, "seconds")
+    print("Memory used:", key_gen_memory_str, "KB")
+
+    # Encrypt the message with AES-GCM
+    encrypted_time = measure_encryption(msg, derived_key)
+
+    # Measure memory usage during encryption
+    encryption_memory_used = get_memory_usage()
+
+    # Ensure non-zero value for encryption time
+    encrypted_time_str = "{:.8f}".format(max(0.00000001, encrypted_time))
+    print("\nEncryption time:", encrypted_time_str, "seconds")
+    print("Memory used during encryption:", "{:.8f}".format(encryption_memory_used), "KB")
+
+    # Decrypt the message with AES-GCM
+    decrypted_time = measure_decryption(ciphertext, iv, tag, derived_key)
+
+    # Measure memory usage during decryption
+    decryption_memory_used = get_memory_usage()
+
+    # Ensure non-zero value for decryption time
+    decrypted_time_str = "{:.8f}".format(max(0.00000001, decrypted_time))
+    print("\nDecryption time:", decrypted_time_str, "seconds")
+    print("Memory used during decryption:", "{:.8f}".format(decryption_memory_used), "KB")
