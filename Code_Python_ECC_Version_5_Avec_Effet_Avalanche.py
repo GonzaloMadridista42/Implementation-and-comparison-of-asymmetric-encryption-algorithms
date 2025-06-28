@@ -1,0 +1,538 @@
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import ecdsa
+import os
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+
+# importing the psutil library to measure the memory consumption that takes the RSA python code, to perform key generation, encoding and decoding of messages
+import psutil
+
+# importing the time library to measure the time that takes the RSA oython code, to perform key generation, encoding and decoding of messages
+import time
+
+# Importing the math library to calculate the size of the generated public and private ECC keys
+import math
+
+# Importing the string library to o generate a message of a given length, generate randomly 5 messages of that given length, and measure the memory used those two generation process
+import string
+
+# Importing the random library to generate random numbers
+import random
+
+# Function to measure memory usage
+def get_memory_usage():
+    process = psutil.Process()
+    return process.memory_info().rss / 1024  # Convert to kilobytes
+
+# Example of using the function
+before_memory = get_memory_usage()
+
+# Function to generate the public and the private keys, for encryption and decryption of messages
+def generate_ecc_key_pair(curve):
+    private_key = ec.generate_private_key(curve, default_backend())
+    public_key = private_key.public_key()
+    # Calculate key sizes
+    public_key_size = public_key.public_numbers().x.bit_length()
+    private_key_size = private_key.private_numbers().private_value.bit_length()
+    return private_key, public_key, public_key_size, private_key_size
+
+# Calculate ECC shared secret
+def calculate_shared_secret(private_key, public_key):
+    shared_secret = private_key.exchange(ec.ECDH(), public_key)
+    # Calculate shared secret size
+    shared_secret_size = len(shared_secret) * 8  # Convert bytes to bits    
+    return shared_secret
+
+# Generate a derived secret key from the shared secret
+def derive_secret_key(shared_secret, length):
+    derived_key = HKDF(
+        algorithm=hashes.SHA256(),
+        length=length,
+        salt=None,
+        info=b'ECC Key Derivation',
+        backend=default_backend()
+    ).derive(shared_secret)
+    # Calculate derived key size
+    derived_key_size = len(derived_key) * 8  # Convert bytes to bits    
+    return derived_key  
+
+# Encrypt a message with AES-GCM
+def encrypt_message_AES_GCM(message, key):
+    iv = os.urandom(16)
+    encryptor = Cipher(
+        algorithms.AES(key),
+        modes.GCM(iv),
+        backend=default_backend()
+    ).encryptor()
+    ciphertext = encryptor.update(message.encode('utf-8')) + encryptor.finalize()
+    tag = encryptor.tag
+    return (ciphertext, iv, tag)
+
+# Decrypt a message with AES-GCM
+def decrypt_message_AES_GCM(ciphertext, iv, tag, key):
+    decryptor = Cipher(
+        algorithms.AES(key),
+        modes.GCM(iv, tag),
+        backend=default_backend()
+    ).decryptor()
+    plaintext = decryptor.update(ciphertext) + decryptor.finalize()
+    return plaintext
+
+# This part of the Python program that implements effectively the ECC algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
+print("The present Python program will demonstrate the effectiveness of a right implementation of the ECC asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm ECC uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
+
+print("a: 256 bits.")
+print("b: 384 bits.")
+print("c: 409 bits.")
+print("d: 512 bits.")
+print("e: 521 bits.")
+print("f: 571 bits.\n")
+
+print("The standard key sizes and standard message length showed above are used by the ECC asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are not used for specifying the size of the message that must be first encrypted and then decrypted by this ECC asymmetric encryption and decryption algorithm.\n")
+print("The reason of that statement is simple: the ECC assymetric encryption and decryption algorithm only need the key sizes showed above, to encrypt and decrypt either short, medium and long messages, those messages usually have the following standard message lenght:")
+
+print("a: 2048 bits.")
+print("b: 3072 bits.")
+print("c: 4096 bits.")
+print("d: 6144 bits.")
+print("e: 8192 bits.")
+print("f: 16384 bits.\n")
+
+print("That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:\n")
+
+print("Standard message lenghts:")
+print("a: 2048 bits.")
+print("b: 3072 bits.")
+print("c: 4096 bits.")
+print("d: 6144 bits.")
+print("e: 8192 bits.")
+print("f: 16384 bits.\n")
+
+print("Standard key sizes:")
+print("a: 256 bits.")
+print("b: 304 bits.")
+print("c: 409 bits.")
+print("d: 512 bits.")
+print("e: 521 bits.")
+print("f: 571 bits.\n") 
+
+print("For that purpose, please specify and choose a standard message length from the list shown above:")
+user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
+
+if user_response_standard_message_length == "a":
+    user_response_message_length = 256
+elif user_response_standard_message_length == "b":
+    user_response_message_length = 384
+elif user_response_standard_message_length == "c":
+    user_response_message_length = 512
+elif user_response_standard_message_length == "d":
+    user_response_message_length = 768
+elif user_response_standard_message_length == "e":
+    user_response_message_length = 1024
+elif user_response_standard_message_length == "f":
+    user_response_message_length = 2048
+
+while user_response_standard_message_length not in {"a", "b", "c", "d", "e", "f"}:
+    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
+    user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
+
+print("For that purpose, please specify and choose a standard key size from the list shown above:")
+user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
+
+if user_response_standard_key_size == "a":
+    user_response_key_size = 256
+elif user_response_standard_key_size == "b":
+    user_response_key_size = 384
+elif user_response_standard_key_size == "c":
+    user_response_key_size = 409
+elif user_response_standard_key_size == "d":
+    user_response_key_size = 512
+elif user_response_standard_key_size == "e":
+    user_response_key_size = 521
+elif user_response_standard_key_size == "f":
+    user_response_key_size = 571
+
+while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
+    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
+    user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
+
+# Checking the consistency between the message length and the key size
+while True:
+    if user_response_standard_message_length == user_response_standard_key_size:
+        break
+    else:
+        print("Error: The selected message length must match the selected key size.")
+        print("Please choose the same option (a, b, c, d, e, or f) for both message length and key size.")
+        user_response_standard_message_length = input("Enter your choice for message length (a, b, c, d, e, or f): ")
+        user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
+
+if user_response_standard_key_size == "a":
+    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
+elif user_response_standard_key_size == "b":
+    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
+elif user_response_standard_key_size == "c":
+    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
+elif user_response_standard_key_size == "d":
+    msg = input("Enter a message that contains maximum 768 characters, spaces included: ")
+elif user_response_standard_key_size == "e":
+    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
+elif user_response_standard_key_size == "f":
+    msg = input("Enter a message that contains maximum 2048 characters, spaces included: ")
+
+while len(msg) > user_response_message_length:
+    print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
+    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")    
+
+print("Now that a standard key size and a standanrd message lenght has been chosed by the user, now the ECC assymetric encryption and decryption algorithm needs now to know which elliptic curve will be used, to perform all the process associated to this ECC assymetric algorithm, like the creation of public and private keys, the creation of shared keys and the encryption and decryption of messages.")
+print("In order to encrypt and decrypt clear and plain messages, the ECC assymetric encryption and decryption algorithm, implemented by the present program, needs to take one of the following elliptic curves, among an immense range of options determined by international organisations:")
+
+print("a: SECP256R1.")
+print("b: SECP384R1.")
+print("c: SECT409R1.")
+print("d: BrainpooolP512R1.")
+print("e: SECP521R1.")
+print("f: SECT571K1.\n")
+
+print("For that purpose, please specify and choose an elliptic curve using the standard key size chosen above, from the list shown above:")
+user_response_standard_elliptic_curve = input("Enter your choice (a, b, c, d, e, or f): ")
+
+if user_response_standard_elliptic_curve == "a":
+    user_response_elliptic_curve = ec.SECP256R1()
+elif user_response_standard_elliptic_curve == "b":
+    user_response_elliptic_curve = ec.SECP384R1()
+elif user_response_standard_elliptic_curve == "c":
+    user_response_elliptic_curve = ec.SECT409R1()
+elif user_response_standard_elliptic_curve == "d":
+    user_response_elliptic_curve = ec.BrainpoolP512R1()
+elif user_response_standard_elliptic_curve == "e":
+    user_response_elliptic_curve = ec.SECP521R1()
+elif user_response_standard_elliptic_curve == "f":
+    user_response_elliptic_curve = ec.SECT571K1()
+
+while user_response_standard_elliptic_curve not in {"a", "b", "c", "d", "e", "f"}:
+    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
+    user_response_standard_elliptic_curve = input("Enter your choice (a, b, c, d, e, or f): ")
+
+if user_response_standard_elliptic_curve == "a":
+    user_response_elliptic_curve = ec.SECP256R1()
+elif user_response_standard_elliptic_curve == "b":
+    user_response_elliptic_curve = ec.SECP384R1()
+elif user_response_standard_elliptic_curve == "c":
+    user_response_elliptic_curve = ec.SECT409R1()
+elif user_response_standard_elliptic_curve == "d":
+    user_response_elliptic_curve = ec.BrainpoolP512R1()
+elif user_response_standard_elliptic_curve == "e":
+    user_response_elliptic_curve = ec.SECP521R1()
+elif user_response_standard_elliptic_curve == "f":
+    user_response_elliptic_curve = ec.SECT571K1()
+
+# Checking the consistency between the key size and the elliptic curve to chose
+while True:
+    if user_response_standard_elliptic_curve == user_response_standard_key_size:
+        break
+    else:
+        print("Error: The selected kwy size must match the selected elliptic curve.")
+        print("Please choose the same option (a, b, c, d, e, or f) for both key size and elliptic curve.")
+        user_response_standard_elliptic_curve = input("Enter your choice for standard elliptic curve (a, b, c, d, e, or f): ")
+        user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
+
+# Generate an ECC key pair
+before_memory = get_memory_usage()
+private_key, public_key, public_key_size, private_key_size = generate_ecc_key_pair(user_response_elliptic_curve)
+after_memory = get_memory_usage()
+memory_used = after_memory - before_memory
+
+# Display information
+print("\nClear Message :")
+print(msg)
+
+print("\nECC Private Key:")
+print(private_key.private_numbers().private_value)
+
+print("\nECC Public Key :")
+print(public_key.public_numbers().x)
+
+# Calculate the shared secret
+shared_secret = calculate_shared_secret(private_key, public_key)
+
+# Derivation of the secret key
+derived_key = derive_secret_key(shared_secret, 32)  # Clé AES 256 bits
+
+print("\nCiphertext pubKey:")
+print(derived_key.hex())
+
+# Encryption key
+print("\nEncryption Key:")
+print(derived_key.hex())
+
+# Decryption key
+print("\nDecryption Key:")
+print(derived_key.hex())
+
+# Encrypt the message with AES-GCM
+ciphertext, iv, tag = encrypt_message_AES_GCM(msg, derived_key)
+
+# Display the encrypted message
+print("\nEncrypted Message:")
+print({
+    'ciphertext': ciphertext.hex(),
+    'nonce': iv.hex(),
+    'authTag': tag.hex(),
+    'ciphertextPubKey': (public_key.public_numbers().x, public_key.public_numbers().y)
+})
+
+# Decrypt the message with AES-GCM
+decrypted_message = decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+
+# Display the decrypted message
+print("\nDecrypted Message:")
+print(decrypted_message.decode('utf-8'))
+
+after_memory = get_memory_usage()
+memory_used = after_memory - before_memory
+
+# Measurement of key generation complexity
+def measure_key_generation(curve):
+    start_memory = get_memory_usage()
+    start_time = time.time()
+    generate_ecc_key_pair(curve)
+    end_time = time.time()
+    end_memory = get_memory_usage()
+    return end_time - start_time, end_memory - start_memory
+
+# Measurement of encryption complexity
+def measure_encryption(msg, derived_key):
+    start_time = time.time()
+    encrypt_message_AES_GCM(msg, derived_key)
+    end_time = time.time()
+    return end_time - start_time
+
+# Measurement of decryption complexity
+def measure_decryption(ciphertext, iv, tag, derived_key):
+    start_time = time.time()
+    decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+    end_time = time.time()
+    return end_time - start_time
+
+# Function to generate a message of a given length
+def generate_message(user_response_message_length):
+    return ''.join(string.ascii_letters[i % len(string.ascii_letters)] for i in range(user_response_message_length))
+
+# Function to generate 5 messages of the same length as the provided plaintext message
+def generate_test_messages(message, num_messages):
+    return [generate_message(len(message)) for _ in range(num_messages)]
+
+# Function to measure memory usage
+def measure_memory_usage():
+    process = psutil.Process()
+    return process.memory_info().rss / 1024  # Convert to kilobytes
+
+def map_key_size_to_curve(key_size):
+    if key_size == 256:
+        return ec.SECP256R1()
+    elif key_size == 384:
+        return ec.SECP384R1()
+    elif key_size == 409:
+        return ec.SECT409R1()
+    elif key_size == 512:
+        return ec.SECP521R1()  # Note: Change this to ec.BrainpoolP512R1() if needed
+    elif key_size == 521:
+        return ec.SECP521R1()
+    elif key_size == 571:
+        return ec.SECT571K1()
+    else:
+        raise ValueError("Invalid key size")
+
+# Function to measure memory usage
+def measure_memory_usage():
+    process = psutil.Process()
+    memory_usage_kb = process.memory_info().rss / 1024  # Convert to kilobytes
+    if memory_usage_kb < 0.001:  # If memory usage is very low
+        return 0.0000001  # Display a value very close to zero
+    else:
+        return memory_usage_kb
+
+#Function to calculate the avalanche effect occurred just by changing the value of a single bit in a given message
+def calculate_avalanche_effect_ECC(key1, key2):
+    # Check if key2 is already an integer
+    if isinstance(key2, int):
+        key2_int = key2
+    else:
+        key2_int = int(''.join(map(str, key2)))
+
+    # Extract integers from the tuples
+    key1_int = int(''.join(map(str, key1)))
+
+    # Calculate the number of different bits between the two keys
+    diff_bits = bin(key1_int ^ key2_int).count('1')
+
+    # Calculate the percentage of avalanche effect
+    total_bits = max(key1_int.bit_length(), key2_int.bit_length())
+    avalanche_percentage = (diff_bits / total_bits) * 100
+
+    return avalanche_percentage
+
+# Function to randomly select a single bit of a given message, in order to change its value, for eventually measuring the avalanche effect caused by the change of the original value of that bit
+def select_random_digit_ECC(key_tuple):
+    # Convert each integer in the tuple to a string
+    key_str = ''.join(map(str, key_tuple))
+
+    # Select a random digit position
+    digit_position = random.randint(0, len(key_str) - 1)
+
+    # Return the selected digit
+    return key_str[digit_position]
+
+# Function to generate a new public and a new private key, using the firstly generated public and private keys, created by the first compilation of the ECC python code
+def modify_key(key, digit_position):
+    # Convert the key to a binary string
+    key_binary = bin(key)[2:]
+
+    # Ensure digit_position is within bounds
+    if digit_position >= len(key_binary):
+        raise ValueError("Digit position exceeds key length")
+
+    # Pad the key with zeros if necessary to ensure a length of 521 bits
+    key_binary_padded = key_binary.zfill(521)
+
+    # Flip the bit at the specified position
+    modified_key_binary = key_binary_padded[:digit_position] + str(1 - int(key_binary[digit_position])) + key_binary_padded[digit_position+1:]
+
+    # Convert the modified binary back to an integer
+    modified_key = int(modified_key_binary, 2)
+
+    return modified_key
+    
+if __name__ == '__main__':
+    # Code block that measures the the size of clear and plain messages used for generating public and private keys, encryption and decryption of those clear and plain messages performed by the Ecc algorithm, in order to well maintain the cybersecurity of the encrypted and decrypted messages generated by that ECC algorithm
+    # Check if keys have already been generated
+    if 'private_key' not in globals() or 'public_key' not in globals():
+        # If keys have not been generated, generate a new key pair
+        private_key, public_key, public_key_size, private_key_size = generate_ecc_key_pair(user_response_elliptic_curve)
+    else:
+        # If keys already exist, retrieve the existing keys
+        pass
+
+    print("")
+
+    # Print the initial message
+    print("Initial Message:")
+    print(msg)
+    print()
+
+    # Print the initial message length
+    message_length = len(msg)  # Length of the initial message
+    print(f"Initial message length (including spaces): {message_length} characters") 
+
+    # Print the content of the public and private keys and of the other keys
+    print("\nECC Private Key:")
+    print(private_key.private_numbers().private_value)
+    print("\nECC Public Key :")
+    print(public_key.public_numbers().x)
+    print("\nCiphertext pubKey:")
+    print(derived_key.hex())
+    print("\nEncryption Key:")
+    print(derived_key.hex())
+    print("\nDecryption Key:")
+    print(derived_key.hex())
+
+    # Print the length of the public and the private keys and of the other keys
+    print("\nECC Public Key Length:", public_key_size, "bits")
+    print("ECC Private Key Length:", private_key_size, "bits")
+    print("Ciphertext pubKey Length:", len(derived_key) * 8, "bits")
+    print("Encryption Key Length:", len(derived_key) * 8, "bits")
+    print("Decryption Key Length:", len(derived_key) * 8, "bits")
+
+    # Encryption of the initial message using ECC
+    ciphertext, iv, tag = encrypt_message_AES_GCM(msg, derived_key)  
+    print("\nEncrypted initial message (unchanged public and private keys):")
+    print({
+        'ciphertext': ciphertext.hex(),
+        'nonce': iv.hex(),
+        'authTag': tag.hex(),
+        'ciphertextPubKey': (public_key.public_numbers().x, public_key.public_numbers().y)
+    })
+
+    # Decryption of the initial message using ECC
+    decrypted_message = decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+    print("\nDecrypted initial message (with unchanged public and private keys):")
+    print(decrypted_message.decode('utf-8'))
+
+    # Calculate the avalanche effect for the public key
+    public_key_avalanche_percentage = calculate_avalanche_effect_ECC((public_key.public_numbers().x, public_key.public_numbers().y), public_key_size)
+
+    # Calculate the avalanche effect for the private key
+    private_key_avalanche_percentage = calculate_avalanche_effect_ECC((private_key.private_numbers().private_value,), private_key_size)
+
+    # Display the avalanche effect percentages
+    print("\nAvalanche Effect for Public Key in % (unchanged public and private keys):", public_key_avalanche_percentage)
+    print("Avalanche Effect for Private Key in % (unchanged public and private keys):", private_key_avalanche_percentage)
+
+    # Select and display a random digit from the public key components using ECC functions
+    public_random_digit_x = select_random_digit_ECC((public_key.public_numbers().x,))
+    print(f"\nRandom digit from Public Key: {public_random_digit_x}")
+    
+    # Select and display a random digit from the private key components using ECC functions
+    private_random_digit = select_random_digit_ECC((private_key.private_numbers().private_value,))
+    print(f"\nRandom digit from Private Key: {private_random_digit}")
+    
+    # Convert public_random_digit_x and private_random_digit to integers if they are strings
+    public_random_digit_x = int(public_random_digit_x)
+    private_random_digit = int(private_random_digit)
+    
+    # Modify the public and private keys
+    modified_public_key = modify_key(public_key.public_numbers().x, public_random_digit_x)
+    modified_private_key = modify_key(private_key.private_numbers().private_value, private_random_digit)
+        
+    # Print the content of the modified public and private keys
+    print("\nModified ECC Private Key:")
+    print(modified_private_key)
+    print("\nModified ECC Public Key :")
+    print(modified_public_key)
+    
+    # Encryption of the initial message using ECC
+    ciphertext, iv, tag = encrypt_message_AES_GCM(msg, derived_key)  
+    print("\nEncrypted initial message (with changed public and private keys):")
+    print({
+        'ciphertext': ciphertext.hex(),
+        'nonce': iv.hex(),
+        'authTag': tag.hex(),
+        'ciphertextPubKey': (modified_public_key, modified_public_key)
+    })
+    
+    # Print the length of the modified public and private keys
+    print("\nLength of the Modified ECC Private Key (in bits):", modified_private_key.bit_length())
+    print("Length of the Modified ECC Public Key (in bits):", modified_public_key.bit_length())
+    print("Ciphertext pubKey Length:", len(derived_key) * 8, "bits")
+    print("Encryption Key Length:", len(derived_key) * 8, "bits")
+    print("Decryption Key Length:", len(derived_key) * 8, "bits")
+
+    # Encryption of the initial message using the modified public key
+    ciphertext_modified, iv_modified, tag_modified = encrypt_message_AES_GCM(msg, derived_key)
+    print("\nEncrypted initial message (modified public key):")
+    print({
+        'ciphertext': ciphertext_modified.hex(),
+        'nonce': iv_modified.hex(),
+        'authTag': tag_modified.hex(),
+        'ciphertextPubKey': (modified_public_key, modified_public_key)
+    })
+
+    # Decryption of the initial message using the modified private key
+    decrypted_modified_message = decrypt_message_AES_GCM(ciphertext_modified, iv_modified, tag_modified, derived_key)
+    print("\nDecrypted initial message (modified private key):")
+    print(decrypted_modified_message.decode('utf-8'))
+
+    # Calculate the avalanche effect for the modified public key
+    modified_public_key_avalanche_percentage = calculate_avalanche_effect_ECC((modified_public_key,), modified_public_key.bit_length())
+
+    # Calculate the avalanche effect for the modified private key
+    modified_private_key_avalanche_percentage = calculate_avalanche_effect_ECC((modified_private_key,), modified_private_key.bit_length())
+
+    # Display the avalanche effect percentages for the modified keys
+    print("\nAvalanche Effect for Modified Public Key in % (modified public and private keys):", modified_public_key_avalanche_percentage)
+    print("Avalanche Effect for Modified Private Key in % (modified public and private keys):", modified_private_key_avalanche_percentage)
