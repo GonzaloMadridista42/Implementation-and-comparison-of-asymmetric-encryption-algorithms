@@ -1,0 +1,150 @@
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import os
+
+# Générer une paire de clés ECC
+def generate_ecc_key_pair(curve):
+    private_key = ec.generate_private_key(curve, default_backend())
+    public_key = private_key.public_key()
+    return private_key, public_key
+
+# Calculer le secret partagé ECC
+def calculate_shared_secret(private_key, public_key):
+    shared_secret = private_key.exchange(ec.ECDH(), public_key)
+    return shared_secret
+
+# Générer une clé secrète dérivée à partir du secret partagé
+def derive_secret_key(shared_secret, length):
+    derived_key = HKDF(
+        algorithm=hashes.SHA256(),
+        length=length,
+        salt=None,
+        info=b'ECC Key Derivation',
+        backend=default_backend()
+    ).derive(shared_secret)
+    return derived_key
+
+# Chiffrer un message avec AES-GCM
+def encrypt_message_AES_GCM(message, key):
+    iv = os.urandom(16)
+    encryptor = Cipher(
+        algorithms.AES(key),
+        modes.GCM(iv),
+        backend=default_backend()
+    ).encryptor()
+    ciphertext = encryptor.update(message) + encryptor.finalize()
+    tag = encryptor.tag
+    return (ciphertext, iv, tag)
+
+# Déchiffrer un message avec AES-GCM
+def decrypt_message_AES_GCM(ciphertext, iv, tag, key):
+    decryptor = Cipher(
+        algorithms.AES(key),
+        modes.GCM(iv, tag),
+        backend=default_backend()
+    ).decryptor()
+    plaintext = decryptor.update(ciphertext) + decryptor.finalize()
+    return plaintext
+
+# Courbe elliptique à utiliser (remplacez 'secp256r1' par la courbe de votre choix)
+curve = ec.SECP256R1()
+
+# Générer une paire de clés ECC
+private_key, public_key = generate_ecc_key_pair(curve)
+
+# Afficher les clés ECC
+print("Clé privée ECC:")
+print(private_key.private_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PrivateFormat.PKCS8,
+    encryption_algorithm=serialization.NoEncryption()
+).decode('utf-8'))
+
+print("Clé publique ECC:")
+print(public_key.public_bytes(
+    encoding=serialization.Encoding.PEM,
+    format=serialization.PublicFormat.SubjectPublicKeyInfo
+).decode('utf-8'))
+
+# Calculer le secret partagé
+shared_secret = calculate_shared_secret(private_key, public_key)
+
+# Dérivation de la clé secrète
+derived_key = derive_secret_key(shared_secret, 32)  # Clé AES 256 bits
+
+# Afficher la clé dérivée
+print("Clé dérivée:")
+print(derived_key.hex())
+
+# Message à chiffrer
+message = b"Hello, world!"
+
+# Chiffrer le message avec AES-GCM
+ciphertext, iv, tag = encrypt_message_AES_GCM(message, derived_key)
+
+# Afficher le message chiffré
+print("Message chiffré:")
+print(ciphertext.hex())
+
+# Déchiffrer le message avec AES-GCM
+decrypted_message = decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+
+# Afficher le message déchiffré
+print("Message déchiffré:")
+print(decrypted_message.decode('utf-8'))
+
+Conversation avec chatgpt, sur les limitations que donne le code python montré ci-dessus :  
+
+Gonzalo:È
+
+LA JE VOIS LE PROBLEME AVEC NOTRE CODE PYTHON!!! REGARDE LA SORTIE QUE DONNE LE TERMINAL WINDOWS DE MON LAPTOP :  C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\INF 1430\Algorithme de chiffrement et de déchiffrement ECC - Programmes d'implémentation des algorithmes composant l'algorithme ECC>python Elliptic_Curve_Criptography_ECC_Algorithm_Implementation.py
+Enter the message : This is a clear and plain message that must be encrypted and then decrypted by the ECC (hybrid AES-GCM version) algorithm!
+
+Clear Message :
+This is a clear and plain message that must be encrypted and then decrypted by the ECC (hybrid AES-GCM version) algorithm!
+
+ECC Private Key:
+0x17e2b10b9c61bab0625b0215ab99f5a90963208a62a6b16d14619d8a2c5ee0f74f55650896f34f9b21a0d88eb427aa58c243fea373f1ceb2430ac79259901ce03f7
+
+ECC Public Key :
+0xa5db327551de9bb77af171c476137cb15dc72ed77b9481a6c976b04b2c098c0640d43d9759f9487c31f2f1c685bb14b5a894cf02ce53cd482df416bda101dc24eb1
+
+Derived Key:
+bb59eda696a98b0e1a7782c9ebb4a6f485f789a8e3255f00d14fb8094c7d11eefcabfedb69799e4ca0a8762c79ce1b213f26d9fff4ec01f5771b388b660678e8
+
+Encryption Key:
+bb59eda696a98b0e1a7782c9ebb4a6f485f789a8e3255f00d14fb8094c7d11eefcabfedb69799e4ca0a8762c79ce1b213f26d9fff4ec01f5771b388b660678e8
+
+Decryption Key:
+bb59eda696a98b0e1a7782c9ebb4a6f485f789a8e3255f00d14fb8094c7d11eefcabfedb69799e4ca0a8762c79ce1b213f26d9fff4ec01f5771b388b660678e8
+Traceback (most recent call last):
+  File "C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\INF 1430\Algorithme de chiffrement et de déchiffrement ECC - Programmes d'implémentation des algorithmes composant l'algorithme ECC\Elliptic_Curve_Criptography_ECC_Algorithm_Implementation.py", line 91, in <module>
+    ciphertext, iv, tag = encrypt_message_AES_GCM(msg, derived_key)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Gonzalo Alfredo\Documents\Cours TÉLUQ - Majeure en Informatique\INF 1430\Algorithme de chiffrement et de déchiffrement ECC - Programmes d'implémentation des algorithmes composant l'algorithme ECC\Elliptic_Curve_Criptography_ECC_Algorithm_Implementation.py", line 34, in encrypt_message_AES_GCM
+    encryptor = Cipher(
+                ^^^^^^^
+  File "C:\Users\Gonzalo Alfredo\AppData\Local\Programs\Python\Python312\Lib\site-packages\cryptography\hazmat\primitives\ciphers\base.py", line 92, in __init__
+    mode.validate_for_algorithm(algorithm)
+  File "C:\Users\Gonzalo Alfredo\AppData\Local\Programs\Python\Python312\Lib\site-packages\cryptography\hazmat\primitives\ciphers\modes.py", line 261, in validate_for_algorithm
+    _check_aes_key_length(self, algorithm)
+  File "C:\Users\Gonzalo Alfredo\AppData\Local\Programs\Python\Python312\Lib\site-packages\cryptography\hazmat\primitives\ciphers\modes.py", line 72, in _check_aes_key_length
+    raise ValueError(
+ValueError: Only 128, 192, and 256 bit keys are allowed for this AES mode
+
+ChatGPT:
+Il semble y avoir un problème avec la taille de la clé AES que vous utilisez. L'erreur indique que seules les clés de 128, 192 et 256 bits sont autorisées pour ce mode AES. Cela signifie que la clé dérivée que vous utilisez (derived_key) doit être de l'une de ces tailles.
+
+Dans votre code, vous utilisez derived_key comme clé AES dans la fonction encrypt_message_AES_GCM. Assurez-vous que la taille de derived_key est l'une des tailles autorisées (128, 192 ou 256 bits). Si vous souhaitez utiliser une clé AES de 512 bits, vous devrez peut-être revoir votre approche et utiliser une clé de taille autorisée ou explorer d'autres modes de chiffrement qui prennent en charge des clés de taille différente.
+
+Gonzalo:
+ok alors AES n'utilise que 128, 192 et 256 bits...
+
+ChatGPT:
+Oui, en effet. Le standard AES (Advanced Encryption Standard) prend en charge uniquement les clés de 128, 192 et 256 bits. Si vous avez besoin d'utiliser une clé de 512 bits, vous devrez explorer d'autres algorithmes de chiffrement qui prennent en charge cette taille de clé. AES est limité aux tailles de clé spécifiées pour des raisons de sécurité et de performances.
+
+
+

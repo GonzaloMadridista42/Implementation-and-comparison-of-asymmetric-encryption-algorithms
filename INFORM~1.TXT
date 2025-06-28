@@ -1,0 +1,10 @@
+Liste de courbes elliptiques (EC) à utiliser pour implémenter l'algorithme de cryptage et de décryptage de message pleins et clairs ECC (ECC) :
+
+1.- Curve25519
+2.- Curve448
+3.- Ed25519
+4.- Ed448
+5.- Curve41417
+6.- Ed25519ph
+
+Ces courbes elliptiques sont reconnues pour leur sécurité et leurs performances dans différents contextes cryptographiques. N'oubliez pas de consulter les dernières recommandations en matière de sécurité et de suivre les bonnes pratiques de cryptographie lors de la mise en œuvre de vos systèmes.
