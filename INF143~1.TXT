@@ -1,38 +1,222 @@
-if __name__ == '__main__':
-    # Measure the total execution time
-    start_time_total = time.time()
+Tailles couramment utilisés pour les clés publiques et privées générées par l'algorithme RSA:
+
+-1024 bits.
+-2048 bits.
+-3072 bits.
+-4096 bits.
+-7680 bits.
+-8192 bits.
+
+Algorithme conçu et créé pour le développement du code Python implémentant l'algorithme de chiffrement et de déchiffrement asymétrique RSA, en version finale et fonctionnelle:
+
+string user_reponse="";
+
+Écrire("The present Python program will demonstrate the effectiveness of a right implementation of the RSA assymetric encryption and decryption algorithm. For that purpose, the implementation of that assymetric algorithm RSA uses a certain standard key sizes determined by international organisations around the world, these stardard key sizes are the following ones:\n")
+
+Écrire("-1024 bits.\n")
+Écrire("-2048 bits.\n")
+Écrire("-3072 bits.\n")
+Écrire("-4096 bits.\n")
+Écrire("-7680 bits.\n")
+Écrire("-8192 bits.\n")
+
+Écrire("The standard key sizes showed above are used by the RSA assymetric encryption and decryption algorithm for the generation and creation of the public and private keys, that are immense and colossal prime numbers genarated randomly. However, for the purpose of the present Python program, these standard key sizes showed above are used also for specifying the size of the message that must be first encryptend and then decrypted by this RSA assymetric encryption and decryption algorithm.")
+
+Écrire("The present Python program, in order to demonstrate the effectiveness of the right implementation of that RSA assymetric encryption and decryption algorithm, needs to know wich  standard key size will be used by the RSA assymetric encryption and decryption algorithm, taking into account that you must chose one of the following stardard key sizes: \n")
+
+Écrire("a: 1024 bits.\n")
+Écrire("b: 2048 bits.\n")
+Écrire("c: 3072 bits.\n")
+Écrire("d: 4096 bits.\n")
+Écrire("e: 7680 bits.\n")
+Écrire("f: 8192 bits.\n")
+
+Écrire("For that purpose, please specify and chose a standard key size from the list showed out above: ")
+Lire(user_reponse)
+
+Si (user_reponse=="a") Alors
+{
+   Function generate_prime_candidate(length):
+      p = RandomBits(length)
+      p |= (1 << length - 1) | 1
+      return p
+
+    Function generate_prime(length=128):
+      desired_bit_length = length * 8
+      bit_length = desired_bit_length // 4
     
-    # Measure the key generation time
-    start_time_key_generation = time.time()
-    g = random.randint(2, q)
-    key = gen_key(q)
-    h = power(g, key, q)
-    end_time_key_generation = time.time()
-    key_generation_time = end_time_key_generation - start_time_key_generation
+      p = 4
+      While Not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+      return p
+
+    Function generate_keys():
+       p = generate_prime()
+       q = generate_prime()
+       n = p * q
+       phi = (p - 1) * (q - 1)
+      
+       e = RandomInteger(1, phi)
+       Tant que GCD(e, phi) != 1 Faire
+          e = RandomInteger(1, phi)
+      
+       d = ModularInverse(e, phi)
+      
+    return ((e, n), (d, n))
+}     
+Sinon Si (user_reponse=="b") Alors
+{     
+   Function generate_prime_candidate(length):
+      p = RandomBits(length)
+      p |= (1 << length - 1) | 1
+      return p
+
+    Function generate_prime(length=256):
+      desired_bit_length = length * 8
+      bit_length = desired_bit_length // 4
     
-    # Print/display the key generation time
-    print("\nKey generation time: {:.6f} seconds ({:.6f} milliseconds)".format(key_generation_time, key_generation_time * 1000))
+      p = 4
+      While Not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+      return p
+
+    Function generate_keys():
+       p = generate_prime()
+       q = generate_prime()
+       n = p * q
+       phi = (p - 1) * (q - 1)
+      
+       e = RandomInteger(1, phi)
+       Tant que GCD(e, phi) != 1 Faire
+          e = RandomInteger(1, phi)
+      
+       d = ModularInverse(e, phi)
+      
+    return ((e, n), (d, n))   
+}
+Sinon Si (user_reponse=="c") Alors
+{
+   Function generate_prime_candidate(length):
+      p = RandomBits(length)
+      p |= (1 << length - 1) | 1
+      return p
+
+    Function generate_prime(length=384):
+      desired_bit_length = length * 8
+      bit_length = desired_bit_length // 4
     
-    # Measure the encryption time
-    start_time_encryption = time.time()
-    ct, p,s = encryption(msg, q, h, g)
-    end_time_encryption = time.time()
-    encryption_time = end_time_encryption - start_time_encryption
+      p = 4
+      While Not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+      return p
+
+    Function generate_keys():
+       p = generate_prime()
+       q = generate_prime()
+       n = p * q
+       phi = (p - 1) * (q - 1)
+      
+       e = RandomInteger(1, phi)
+       Tant que GCD(e, phi) != 1 Faire
+          e = RandomInteger(1, phi)
+      
+       d = ModularInverse(e, phi)
+      
+    return ((e, n), (d, n))
+}
+Sinon Si (user_reponse=="d") Alors
+{
+   Function generate_prime_candidate(length):
+      p = RandomBits(length)
+      p |= (1 << length - 1) | 1
+      return p
+
+    Function generate_prime(length=512):
+      desired_bit_length = length * 8
+      bit_length = desired_bit_length // 4
     
-    # Print/display the encryption time
-    print("\nEncryption time: {:.6f} seconds ({:.6f} milliseconds)".format(encryption_time, encryption_time * 1000))
+      p = 4
+      While Not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+      return p
+
+    Function generate_keys():
+       p = generate_prime()
+       q = generate_prime()
+       n = p * q
+       phi = (p - 1) * (q - 1)
+      
+       e = RandomInteger(1, phi)
+       Tant que GCD(e, phi) != 1 Faire
+          e = RandomInteger(1, phi)
+      
+       d = ModularInverse(e, phi)
+      
+    return ((e, n), (d, n))
+}
+Sinon Si (user_reponse=="e") Alors
+{
+    Function generate_prime_candidate(length):
+      p = RandomBits(length)
+      p |= (1 << length - 1) | 1
+      return p
+
+    Function generate_prime(length=960):
+      desired_bit_length = length * 8
+      bit_length = desired_bit_length // 4
     
-    # Measure the decryption time
-    start_time_decryption = time.time()
-    pt = decryption(ct, p, key, q)
-    d_msg = ''.join(pt)
-    end_time_decryption = time.time()
-    decryption_time = end_time_decryption - start_time_decryption
+      p = 4
+      While Not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+      return p
+
+    Function generate_keys():
+       p = generate_prime()
+       q = generate_prime()
+       n = p * q
+       phi = (p - 1) * (q - 1)
+      
+       e = RandomInteger(1, phi)
+       Tant que GCD(e, phi) != 1 Faire
+          e = RandomInteger(1, phi)
+      
+       d = ModularInverse(e, phi)
+      
+    return ((e, n), (d, n))
+}
+Sinon Si (user_reponse=="f") Alors
+{
+     Function generate_prime_candidate(length):
+      p = RandomBits(length)
+      p |= (1 << length - 1) | 1
+      return p
+
+    Function generate_prime(length=1024):
+      desired_bit_length = length * 8
+      bit_length = desired_bit_length // 4
     
-    # Print/display the decryption time
-    print("\nDecryption time: {:.6f} seconds ({:.6f} milliseconds)".format(decryption_time, decryption_time * 1000))
-    
-    # Print/display the total execution time
-    end_time_total = time.time()
-    total_time = end_time_total - start_time_total
-    print("\nTotal execution time: {:.6f} seconds ({:.6f} milliseconds)".format(total_time, total_time * 1000))
+      p = 4
+      While Not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+      return p
+
+    Function generate_keys():
+       p = generate_prime()
+       q = generate_prime()
+       n = p * q
+       phi = (p - 1) * (q - 1)
+      
+       e = RandomInteger(1, phi)
+       Tant que GCD(e, phi) != 1 Faire
+          e = RandomInteger(1, phi)
+      
+       d = ModularInverse(e, phi)
+      
+    return ((e, n), (d, n))
+}
+
+
+
+
+
+

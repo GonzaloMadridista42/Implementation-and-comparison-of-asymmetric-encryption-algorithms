@@ -1,906 +1,513 @@
-Liste des dates de modifications réalisées sur le code Python implémentant l'algorithme El-Gamal:
-- Modification #1 du code Python implémentant l'algorithme El-Gamal:
+Liste des dates de modifications réalisées sur le code Python implémentant l'algorithme RSA:
+- Modification #1 du code Python implémentant l'algorithme RSA:
 
+# Importing the random library to generate random numbers
 import random
-import sys
+user_reponse = ""
 
-# Increase the recursion limit
-sys.setrecursionlimit(10**6)
-
-# To find gcd of two numbers
+# Function to calculate the Greatest Common Divisor (GCD) of two numbers
 def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b
-    else:
-        return gcd(b, a % b)
+    while b != 0:
+        a, b = b, a % b
+    return a
 
-# For key generation i.e. large random number
-def gen_key(q):
-    key = random.randint(pow(10, 50), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(10, 50), q)
-    return key
+# Function to calculate the modular inverse of a number modulo m
+def modinv(a, m):
+    m0, x0, x1 = m, 0, 1
+    while a > 1:
+        q = a // m
+        m, a = a % m, m
+        x0, x1 = x1 - q * x0, x0
+    return x1 + m0 if x1 < 0 else x1
 
-def power(a, b, c):
-    x = 1
-    y = a
-    while b > 0:
-        if b % 2 == 0:
-            x = (x * y) % c
-        y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
-    return x % c
+# Function to test if a number is prime (using the Miller-Rabin primality test)
+def is_prime(n, k=5):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0:
+        return False
 
-# For asymmetric encryption
-def encryption(msg, q, h, g):
-    ct = []
-    k = gen_key(q)
-    s = power(h, k, q)
-    p = power(g, k, q)
-    for i in range(0, len(msg)):
-        ct.append(msg[i])
-    print("g^k used= ", p)
-    print("g^ak used= ", s)
-    for i in range(0, len(ct)):
-        ct[i] = s * ord(ct[i])
-    return ct, p
+    d = n - 1
+    s = 0
+    while d % 2 == 0:
+        d //= 2
+        s += 1
 
-# For decryption
-def decryption(ct, p, key, q):
-    pt = []
-    h = power(p, key, q)
-    for i in range(0, len(ct)):
-        pt.append(chr(int(ct[i] / h)))
-    return pt
+    for _ in range(k):
+        a = random.randint(2, n - 1)
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(s - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+    return True                                                                  
 
-# This part of the Python program that implements effectively the RSA algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message lenght determined by international organisations around the world, these standard key sizes and standard message lenght are the following ones:\n")
+# Function to generate a potential prime number candidate
+def generate_prime_candidate(length):
+    p = random.getrandbits(length)
+    p |= (1 << length - 1) | 1
+    return p
 
+'''
+# Python code that has been modified and improved below
+# Function to generate a prime number
+def generate_prime(length=129):
+    p = 4
+    while not is_prime(p):
+        p = generate_prime_candidate(length)
+    return p
+'''
+
+# This part of the Python program that implements effectively the RSA algorithm, displays the presentation of that Python program
+print("The present Python program will demonstrate the effectiveness of a right implementation of the RSA asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm RSA uses a certain standard key sizes determined by international organisations around the world, these standard key sizes are the following ones:\n")
+
+print("- 1024 bits.")
 print("- 2048 bits.")
 print("- 3072 bits.")
 print("- 4096 bits.")
-print("- 6144 bits.")
-print("- 8192 bits.")
-print("- 16384 bits.\n")
+print("- 7680 bits.")
+print("- 8192 bits.\n")
 
-print("The standard key sizes and standard message lenght showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
+print("The standard key sizes showed above are used by the RSA asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed above are used also for specifying the size of the message that must be first encrypted and then decrypted by this RSA asymmetric encryption and decryption algorithm.\n")
 
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and wich standard message lenght will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lenghts:\n")
+print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that RSA asymmetric encryption and decryption algorithm, needs to know which standard key size will be used by the RSA asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes:\n")
 
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
+print("a: 1024 bits.")
+print("b: 2048 bits.")
+print("c: 3072 bits.")
+print("d: 4096 bits.")
+print("e: 7680 bits.")
+print("f: 8192 bits.\n") 
 
 print("For that purpose, please specify and chose a standard key size from the list showed out above:")
-user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
+user_reponse = input("Enter your choice (a, b, c, d, e, or f): ")
 
-while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
+if user_reponse == "a":
+   # Function to generate a prime number
+   def generate_prime(length=128):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+           p = generate_prime_candidate(bit_length)
+       return p
+elif user_reponse == "b":
+     # Function to generate a prime number
+     def generate_prime(length=256):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
+elif user_reponse == "c":
+     def generate_prime(length=384):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
+elif user_reponse == "d":
+     def generate_prime(length=512):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
+elif user_reponse == "e":
+     def generate_prime(length=960):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
+elif user_reponse == "f":
+     def generate_prime(length=1024):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p     
 
-##Original imput coded with the El-Gamal Python code
-#q=random.randint(pow(10,20),pow(10,129))
+# Function to generate RSA keys
+def generate_keys():
+    p = generate_prime()
+    q = generate_prime()
+    n = p * q
+    phi = (p - 1) * (q - 1)
 
-if user_response_standard_key_size == "a":
-  q=random.randint(pow(10,20),pow(10,256))
-elif user_response_standard_key_size == "b":
-  q=random.randint(pow(10,20),pow(10,384))
-elif user_response_standard_key_size == "c":
-  q=random.randint(pow(10,20),pow(10,512))
-elif user_response_standard_key_size == "d":
-  q=random.randint(pow(10,20),pow(10,768))
-elif user_response_standard_key_size == "e":
-  q=random.randint(pow(10,20),pow(10,1024))
-elif user_response_standard_key_size == "f":
-  q=random.randint(pow(10,20),pow(10,2048))
+    e = random.randint(1, phi)
+    while gcd(e, phi) != 1:
+        e = random.randint(1, phi)
 
-msg=input("Enter message:")
+    d = modinv(e, phi)
+    return ((e, n), (d, n))
 
-g = random.randint(2, q)
-key = gen_key(q)
-h = power(g, key, q)
+# Function to encrypt a message
+def encrypt(m, public_key):
+    e, n = public_key
+    return pow(m, e, n)
 
-print("\ng used=", g)
-print("g^a used=", h)
+# Function to decrypt a message
+def decrypt(c, private_key):
+    d, n = private_key
+    return pow(c, d, n)
 
-ct, p = encryption(msg, q, h, g)
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
+# Function to encode a message into a list of integers representing the ASCII codes of characters
+def encode_message(message):
+    return [ord(char) for char in message]
 
-pt = decryption(ct, p, key, q)
-d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
+# Function to decode a message encoded into a string of characters
+def decode_message(encoded_message):
+    return ''.join(chr(char) for char in encoded_message)
 
-Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme El-Gamal: 
+# Function to demonstrate the functionnality of the RSA algorithm
+def rsa_demo():
+    public_key, private_key = generate_keys()
+    message = input("Enter the message: ")
+    encoded_message = encode_message(message)
+    encrypted_message = [encrypt(char, public_key) for char in encoded_message]
+    decrypted_message = [decrypt(char, private_key) for char in encrypted_message]
+    decoded_message = decode_message(decrypted_message)
 
-06-03-2024, à 14:20
+    print("\nInitial message:")
+    print(message)
+    print("\nPublic key:")
+    print(public_key)
+    print("\nPrivate key:")
+    print(private_key)
+    print("\nEncoded message (encrypted by public key):")
+    print(encrypted_message)
+    print("\nDecoded message (decrypted by private key):")
+    print(decoded_message)
+
+# Executing the RSA algorithm functionnality demonstration
+if __name__ == "__main__":
+    rsa_demo()
+
+Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme RSA: 
+
+06-03-2024 à 17:18
 
 - Version du code Python implémentant l'algorithme RSA, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 1
 
-- Modification #2 du code Python implémentant l'algorithme El-Gamal:
-
-import random
-import sys
-
-# Increase the recursion limit
-sys.setrecursionlimit(10**6)
-
-# To find gcd of two numbers
-def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b
-    else:
-        return gcd(b, a % b)
-
-# For key generation i.e. large random number
-def gen_key(q):
-    key = random.randint(pow(10, 50), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(10, 50), q)
-    return key
-
-def power(a, b, c):
-    x = 1
-    y = a
-    while b > 0:
-        if b % 2 == 0:
-            x = (x * y) % c
-        y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
-    return x % c
-
-# For asymmetric encryption
-def encryption(msg, q, h, g):
-    ct = []
-    k = gen_key(q)
-    s = power(h, k, q)
-    p = power(g, k, q)
-    for i in range(0, len(msg)):
-        ct.append(msg[i])
-    print("g^k used= ", p)
-    print("g^ak used= ", s)
-    for i in range(0, len(ct)):
-        ct[i] = s * ord(ct[i])
-    return ct, p
-
-# For decryption
-def decryption(ct, p, key, q):
-    pt = []
-    h = power(p, key, q)
-    for i in range(0, len(ct)):
-        pt.append(chr(int(ct[i] / h)))
-    return pt
-
-# This part of the Python program that implements effectively the RSA algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message lenght determined by international organisations around the world, these standard key sizes and standard message lenght are the following ones:\n")
-
-print("- 2048 bits.")
-print("- 3072 bits.")
-print("- 4096 bits.")
-print("- 6144 bits.")
-print("- 8192 bits.")
-print("- 16384 bits.\n")
-
-print("The standard key sizes and standard message lenght showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
-
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and wich standard message lenght will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lenghts:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
-
-print("For that purpose, please specify and chose a standard message lenght from the list showed out above:")
-user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    user_response_message_length = 256
-elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
-elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
-elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
-elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
-elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
-
-print("For that purpose, please specify and chose a standard key size from the list showed out above:")
-user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
-elif user_response_standard_message_length == "b":
-    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
-elif user_response_standard_message_length == "c":
-    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
-elif user_response_standard_message_length == "d":
-    msg = input("Enter a message that contains maximum 768 characters, spaces included: ")
-elif user_response_standard_message_length == "e":
-    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
-elif user_response_standard_message_length == "f":
-    msg = input("Enter a message that contains maximum 2048 characters, spaces included: ")
-
-while len(msg) > user_response_message_length:
-    print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
-    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")
-
-##Original imput coded with the El-Gamal Python code
-#q=random.randint(pow(10,20),pow(10,129))
-
-if user_response_standard_key_size == "a":
-  q=random.randint(pow(10,20),pow(10,256))
-elif user_response_standard_key_size == "b":
-  q=random.randint(pow(10,20),pow(10,384))
-elif user_response_standard_key_size == "c":
-  q=random.randint(pow(10,20),pow(10,512))
-elif user_response_standard_key_size == "d":
-  q=random.randint(pow(10,20),pow(10,768))
-elif user_response_standard_key_size == "e":
-  q=random.randint(pow(10,20),pow(10,1024))
-elif user_response_standard_key_size == "f":
-  q=random.randint(pow(10,20),pow(10,2048))
-
-g = random.randint(2, q)
-key = gen_key(q)
-h = power(g, key, q)
-
-print("\ng used=", g)
-print("g^a used=", h)
-
-ct, p = encryption(msg, q, h, g)
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
-
-pt = decryption(ct, p, key, q)
-d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
-
-Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme El-Gamal: 
-
-06-03-2024, à 14:08
-
-- Version du code Python implémentant l'algorithme RSA, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 2
-
-- Modification #3 du code Python implémentant l'algorithme El-Gamal:
-
-import random
-import sys
-
-# Increase the recursion limit
-sys.setrecursionlimit(10**6)
-
-# To find gcd of two numbers
-def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b
-    else:
-        return gcd(b, a % b)
-
-# For key generation i.e. large random number
-def gen_key(q):
-    key = random.randint(pow(10, 50), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(10, 50), q)
-    return key
-
-def power(a, b, c):
-    x = 1
-    y = a
-    while b > 0:
-        if b % 2 == 0:
-            x = (x * y) % c
-        y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
-    return x % c
-
-# For asymmetric encryption
-def encryption(msg, q, h, g):
-    ct = []
-    k = gen_key(q)
-    s = power(h, k, q)
-    p = power(g, k, q)
-    for i in range(0, len(msg)):
-        ct.append(msg[i])
-    print("g^k used= ", p)
-    print("g^ak used= ", s)
-    for i in range(0, len(ct)):
-        ct[i] = s * ord(ct[i])
-    return ct, p
-
-# For decryption
-def decryption(ct, p, key, q):
-    pt = []
-    h = power(p, key, q)
-    for i in range(0, len(ct)):
-        pt.append(chr(int(ct[i] / h)))
-    return pt
-
-# This part of the Python program that implements effectively the RSA algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message lenght determined by international organisations around the world, these standard key sizes and standard message lenght are the following ones:\n")
-
-print("- 2048 bits.")
-print("- 3072 bits.")
-print("- 4096 bits.")
-print("- 6144 bits.")
-print("- 8192 bits.")
-print("- 16384 bits.\n")
-
-print("The standard key sizes and standard message lenght showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
-
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and wich standard message lenght will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lenghts:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
-
-print("For that purpose, please specify and chose a standard message lenght from the list showed out above:")
-user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    user_response_message_length = 256
-elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
-elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
-elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
-elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
-elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
-
-print("For that purpose, please specify and chose a standard key size from the list showed out above:")
-user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
-elif user_response_standard_message_length == "b":
-    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
-elif user_response_standard_message_length == "c":
-    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
-elif user_response_standard_message_length == "d":
-    msg = input("Enter a message that contains maximum 768 characters, spaces included: ")
-elif user_response_standard_message_length == "e":
-    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
-elif user_response_standard_message_length == "f":
-    msg = input("Enter a message that contains maximum 2048 characters, spaces included: ")
-
-while len(msg) > user_response_message_length:
-    print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
-    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")
-
-##Original imput coded with the El-Gamal Python code
-#q=random.randint(pow(10,20),pow(10,129))
-
-if user_response_standard_key_size == "a":
-  q=random.randint(pow(10,20),pow(10,256))
-elif user_response_standard_key_size == "b":
-  q=random.randint(pow(10,20),pow(10,384))
-elif user_response_standard_key_size == "c":
-  q=random.randint(pow(10,20),pow(10,512))
-elif user_response_standard_key_size == "d":
-  q=random.randint(pow(10,20),pow(10,768))
-elif user_response_standard_key_size == "e":
-  q=random.randint(pow(10,20),pow(10,1024))
-elif user_response_standard_key_size == "f":
-  q=random.randint(pow(10,20),pow(10,2048))
-
-g = random.randint(2, q)
-key = gen_key(q)
-h = power(g, key, q)
-
-print("\ng used=", g)
-print("g^a used=", h)
-
-ct, p = encryption(msg, q, h, g)
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
-
-pt = decryption(ct, p, key, q)
-d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
-
-Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme RSA: 
-
-11-03-2024, à 3:08
-
-- Version du code Python implémentant l'algorithme RSA, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 3
-
-- Modification #4 du code Python implémentant l'algorithme El-Gamal:
-
-import random
-import sys
-
-# Increase the recursion limit
-sys.setrecursionlimit(10**6)
-
-# To find gcd of two numbers
-def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b
-    else:
-        return gcd(b, a % b)
-
-# For key generation i.e. large random number
-def gen_key(q):
-    key = random.randint(pow(2, 900), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(2, 900), q)
-    return key
-
-def power(a, b, c):
-    x = 1
-    y = a
-    while b > 0:
-        if b % 2 == 0:
-            x = (x * y) % c
-        y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
-    return x % c
-
-# For asymmetric encryption
-def encryption(msg, q, h, g):
-    ct = []
-    k = gen_key(q)
-    s = power(h, k, q)
-    p = power(g, k, q)
-    for i in range(0, len(msg)):
-        ct.append(msg[i])
-    print("g^k used= ", p)
-    print("g^ak used= ", s)
-    for i in range(0, len(ct)):
-        ct[i] = s * ord(ct[i])
-    return ct, p
-
-# For decryption
-def decryption(ct, p, key, q):
-    pt = []
-    h = power(p, key, q)
-    for i in range(0, len(ct)):
-        pt.append(chr(int(ct[i] / h)))
-    return pt
-
-# This part of the Python program that implements effectively the RSA algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n")
-
-print("The standard key sizes and standard message length showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
-
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
-
-print("For that purpose, please specify and choose a standard message length from the list shown above:")
-user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    user_response_message_length = 256
-elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
-elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
-elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
-elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
-elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
-
-while user_response_standard_message_length not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
-
-print("For that purpose, please specify and choose a standard key size from the list shown above:")
-user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_key_size == "a":
-    user_response_message_length = 256*8
-elif user_response_standard_key_size == "b":
-    user_response_message_length = 384*8
-elif user_response_standard_key_size == "c":
-    user_response_message_length = 512*8
-elif user_response_standard_key_size == "d":
-    user_response_message_length = 768*8
-elif user_response_standard_key_size == "e":
-    user_response_message_length = 1024*8
-elif user_response_standard_key_size == "f":
-    user_response_message_length = 2048*8
-
-while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_key_size == "a":
-    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
-elif user_response_standard_key_size == "b":
-    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
-elif user_response_standard_key_size == "c":
-    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
-elif user_response_standard_key_size == "d":
-    msg = input("Enter a message that contains maximum 768 characters, spaces included: ")
-elif user_response_standard_key_size == "e":
-    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
-elif user_response_standard_key_size == "f":
-    msg = input("Enter a message that contains maximum 2048 characters, spaces included: ")
-
-while len(msg) > user_response_message_length:
-    print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
-    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")
-
-if user_response_standard_key_size == "a":
-    q=random.randint(pow(2, 900),pow(2, 2048))
-elif user_response_standard_key_size == "b":
-    q=random.randint(pow(2, 900),pow(2, 3072))
-elif user_response_standard_key_size == "c":
-    q=random.randint(pow(2, 900),pow(2, 4096))
-elif user_response_standard_key_size == "d":
-    q=random.randint(pow(2, 900),pow(2, 6144))
-elif user_response_standard_key_size == "e":
-    q=random.randint(pow(2, 900),pow(2, 8192))
-elif user_response_standard_key_size == "f":
-    q=random.randint(pow(2, 900),pow(2, 16384))
-
-g = random.randint(2, q)
-key = gen_key(q)
-h = power(g, key, q)
-
-print("\ng used=", g)
-print("g^a used=", h)
-
-ct, p = encryption(msg, q, h, g)
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
-
-pt = decryption(ct, p, key, q)
-d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
-
-Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme El-Gamal: 
-
-11-03-2024, à 4:38
-
-- Version du code Python implémentant l'algorithme El-Gamal, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 4
-
-- Modification #5 du code Python implémentant l'algorithme El-Gamal:
-import random
-import sys
-
-# Increase the recursion limit
-sys.setrecursionlimit(10**6)
-
-# To find gcd of two numbers
-def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b
-    else:
-        return gcd(b, a % b)
-
-# For key generation i.e. large random number
-def gen_key(q):
-    key = random.randint(pow(2, 900), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(2, 900), q)
-    return key
-
-def power(a, b, c):
-    x = 1
-    y = a
-    while b > 0:
-        if b % 2 == 0:
-            x = (x * y) % c
-        y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
-    return x % c
-
-# For asymmetric encryption
-def encryption(msg, q, h, g):
-    ct = []
-    k = gen_key(q)
-    s = power(h, k, q)
-    p = power(g, k, q)
-    for i in range(0, len(msg)):
-        ct.append(msg[i])
-    print("g^k used= ", p)
-    print("g^ak used= ", s)
-    for i in range(0, len(ct)):
-        ct[i] = s * ord(ct[i])
-    return ct, p
-
-# For decryption
-def decryption(ct, p, key, q):
-    pt = []
-    h = power(p, key, q)
-    for i in range(0, len(ct)):
-        pt.append(chr(int(ct[i] / h)))
-    return pt
-
-# This part of the Python program that implements effectively the El-Gamal algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n")
-
-print("The standard key sizes and standard message length showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
-
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
-
-print("For that purpose, please specify and choose a standard message length from the list shown above:")
-user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    user_response_message_length = 256
-elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
-elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
-elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
-elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
-elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
-
-while user_response_standard_message_length not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
-
-print("For that purpose, please specify and choose a standard key size from the list shown above:")
-user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_key_size == "a":
-    user_response_key_size = 256*8
-elif user_response_standard_key_size == "b":
-    user_response_key_size = 384*8
-elif user_response_standard_key_size == "c":
-    user_response_key_size = 512*8
-elif user_response_standard_key_size == "d":
-    user_response_key_size = 768*8
-elif user_response_standard_key_size == "e":
-    user_response_key_size = 1024*8
-elif user_response_standard_key_size == "f":
-    user_response_key_size = 2048*8
-
-while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
-
-# Checking the consistency between the message length and the key size
-while True:
-    if user_response_standard_message_length == user_response_standard_key_size:
-        break
-    else:
-        print("Error: The selected message length must match the selected key size.")
-        print("Please choose the same option (a, b, c, d, e, or f) for both message length and key size.")
-        user_response_standard_message_length = input("Enter your choice for message length (a, b, c, d, e, or f): ")
-        user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
-
-if user_response_standard_message_length == "a":
-    user_response_message_length = 256
-elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
-elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
-elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
-elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
-elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
-
-if user_response_standard_key_size == "a":
-    user_response_key_size = 256*8
-elif user_response_standard_key_size == "b":
-    user_response_key_size = 384*8
-elif user_response_standard_key_size == "c":
-    user_response_key_size = 512*8
-elif user_response_standard_key_size == "d":
-    user_response_key_size = 768*8
-elif user_response_standard_key_size == "e":
-    user_response_key_size = 1024*8
-elif user_response_standard_key_size == "f":
-    user_response_key_size = 2048*8
-
-if user_response_standard_key_size == "a":
-    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
-elif user_response_standard_key_size == "b":
-    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
-elif user_response_standard_key_size == "c":
-    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
-elif user_response_standard_key_size == "d":
-    msg = input("Enter a message that contains maximum 768 characters, spaces included: ")
-elif user_response_standard_key_size == "e":
-    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
-elif user_response_standard_key_size == "f":
-    msg = input("Enter a message that contains maximum 2048 characters, spaces included: ")
-
-while len(msg) > user_response_message_length:
-    print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
-    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")
-
-if user_response_standard_key_size == "a":
-    q=random.randint(pow(2, 900),pow(2, 2048))
-elif user_response_standard_key_size == "b":
-    q=random.randint(pow(2, 900),pow(2, 3072))
-elif user_response_standard_key_size == "c":
-    q=random.randint(pow(2, 900),pow(2, 4096))
-elif user_response_standard_key_size == "d":
-    q=random.randint(pow(2, 900),pow(2, 6144))
-elif user_response_standard_key_size == "e":
-    q=random.randint(pow(2, 900),pow(2, 8192))
-elif user_response_standard_key_size == "f":
-    q=random.randint(pow(2, 900),pow(2, 16384))
-
-print("Generating El-Gamal keys...")
-g = random.randint(2, q)
-key = gen_key(q)
-h = power(g, key, q)
-print("El-Gamal keys generated successfully.")
-
-print("\ng used=", g)
-print("g^a used=", h)
-
-ct, p = encryption(msg, q, h, g)
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
-
-pt = decryption(ct, p, key, q)
-d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
-
-Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme RSA: 
-
-18-03-2024, à 5:25
-
-- Version du code Python implémentant l'algorithme RSA, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 5
-
-- Modification #6 du code Python implémentant l'algorithme El-Gamal:
+- Modification #2 du code Python implémentant l'algorithme RSA:
 
 # Importing the random library to generate random numbers
 import random
 
-# Importing the sys module to increase the recursion limit
-import sys  # The sys module provides access to some variables used or maintained by the Python interpreter and to functions that interact strongly with the interpreter.
-
-# importing the time library to measure the time that takes the RSA oython code, to perform key generation, encoding and decoding of messages
-import time
-
-# Increase the recursion limit
-sys.setrecursionlimit(10**6)
-
-# To find gcd of two numbers
+# Function to calculate the Greatest Common Divisor (GCD) of two numbers
 def gcd(a, b):
-    if a < b:
-        return gcd(b, a)
-    elif a % b == 0:
-        return b
-    else:
-        return gcd(b, a % b)
+    while b != 0:
+        a, b = b, a % b
+    return a
 
-# For key generation i.e. large random number
-def gen_key(q):
-    key = random.randint(pow(2, 900), q)
-    while gcd(q, key) != 1:
-        key = random.randint(pow(2, 900), q)
-    return key
+# Function to calculate the modular inverse of a number modulo m
+def modinv(a, m):
+    m0, x0, x1 = m, 0, 1
+    while a > 1:
+        q = a // m
+        m, a = a % m, m
+        x0, x1 = x1 - q * x0, x0
+    return x1 + m0 if x1 < 0 else x1
 
-def power(a, b, c):
-    x = 1
-    y = a
-    while b > 0:
-        if b % 2 == 0:
-            x = (x * y) % c
-        y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
-    return x % c
+# Function to test if a number is prime (using the Miller-Rabin primality test)
+def is_prime(n, k=5):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0:
+        return False
 
-# For asymmetric encryption
-def encryption(msg, q, h, g):
-    ct = []
-    k = gen_key(q)
-    s = power(h, k, q)
-    p = power(g, k, q)
-    for i in range(0, len(msg)):
-        ct.append(msg[i])
-    print("g^k used= ", p)
-    print("g^ak used= ", s)
-    for i in range(0, len(ct)):
-        ct[i] = s * ord(ct[i])
-    return ct, p
-    
-# For decryption
-def decryption(ct, p, key, q):
-    pt = []
-    h = power(p, key, q)
-    for i in range(0, len(ct)):
-        pt.append(chr(int(ct[i] / h)))
-    return pt
+    d = n - 1
+    s = 0
+    while d % 2 == 0:
+        d //= 2
+        s += 1
 
-# This part of the Python program that implements effectively the El-Gamal algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
+    for _ in range(k):
+        a = random.randint(2, n - 1)
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(s - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+    return True
 
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n")
+# Function to generate a potential prime number candidate
+def generate_prime_candidate(length):
+    p = random.getrandbits(length)
+    p |= (1 << length - 1) | 1
+    return p
 
-print("The standard key sizes and standard message length showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
+# Function to generate a prime number close to the specified length
+def generate_prime(length):
+    p = generate_prime_candidate(length)
+    while not is_prime(p):
+        p = generate_prime_candidate(length)
+    return p
 
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths:\n")
+# Function to generate RSA keys with a specified key length
+def generate_keys(key_length):
+    p = generate_prime(key_length // 4)
+    q = generate_prime(key_length // 4)
+    n = p * q
+    phi = (p - 1) * (q - 1)
 
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
+    e = random.randint(2, phi)  # Start from 2 to ensure coprimality with phi
+    while gcd(e, phi) != 1:
+        e = random.randint(2, phi)
+
+    d = modinv(e, phi)
+    return ((e, n), (d, n))
+
+# Function to encrypt a message
+def encrypt(m, public_key):
+    e, n = public_key
+    return pow(m, e, n)
+
+# Function to decrypt a message
+def decrypt(c, private_key):
+    d, n = private_key
+    return pow(c, d, n)
+
+# Function to encode a message into a list of integers representing the ASCII codes of characters
+def encode_message(message):
+    return [ord(char) for char in message]
+
+# Function to decode a message encoded into a string of characters
+def decode_message(encoded_message):
+    return ''.join(chr(char) for char in encoded_message)
+
+# Function to demonstrate the functionality of the RSA algorithm
+def rsa_demo():
+    print("The present Python program will demonstrate the effectiveness of a right implementation of the RSA asymmetric encryption and decryption algorithm.")
+    print("Please specify the maximum key size:")
+    print("a: 1024 bits.")
+    print("b: 2048 bits.")
+    print("c: 3072 bits.")
+    print("d: 4096 bits.")
+    print("e: 7680 bits.")
+    print("f: 8192 bits.")
+
+    user_response = input("Enter your choice (a, b, c, d, e, or f): ")
+
+    while user_response not in {"a", "b", "c", "d", "e", "f"}:
+        print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
+        user_response = input("Enter your choice (a, b, c, d, e, or f): ")
+
+    if user_response == "a":
+        key_length = 1024
+    elif user_response == "b":
+        key_length = 2048
+    elif user_response == "c":
+        key_length = 3072
+    elif user_response == "d":
+        key_length = 4096
+    elif user_response == "e":
+        key_length = 7680
+    elif user_response == "f":
+        key_length = 8192
+
+    print("Generating RSA keys...")
+    public_key, private_key = generate_keys(key_length)
+    print("RSA keys generated successfully.")
+
+    message = input("Enter the message: ")
+    encoded_message = encode_message(message)
+    encrypted_message = [encrypt(char, public_key) for char in encoded_message]
+    decrypted_message = [decrypt(char, private_key) for char in encrypted_message]
+    decoded_message = decode_message(decrypted_message)
+
+    print("\nInitial message:")
+    print(message)
+    print("\nPublic key:")
+    print(public_key)
+    print("\nPrivate key:")
+    print(private_key)
+    print("\nEncoded message (encrypted by public key):")
+    print(encrypted_message)
+    print("\nDecoded message (decrypted by private key):")
+    print(decoded_message)
+
+# Executing the RSA algorithm functionality demonstration
+if __name__ == "__main__":
+    rsa_demo()
+
+Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme RSA: 
+
+11-03-2024 à 17:20
+
+- Version du code Python implémentant l'algorithme RSA, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 2
+
+- Modification #3 du code Python implémentant l'algorithme RSA:
+
+# Importing the random library to generate random numbers
+import random
+
+# Function to calculate the Greatest Common Divisor (GCD) of two numbers
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+# Function to calculate the modular inverse of a number modulo m
+def modinv(a, m):
+    m0, x0, x1 = m, 0, 1
+    while a > 1:
+        q = a // m
+        m, a = a % m, m
+        x0, x1 = x1 - q * x0, x0
+    return x1 + m0 if x1 < 0 else x1
+
+# Function to test if a number is prime (using the Miller-Rabin primality test)
+def is_prime(n, k=5):
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0:
+        return False
+
+    d = n - 1
+    s = 0
+    while d % 2 == 0:
+        d //= 2
+        s += 1
+
+    for _ in range(k):
+        a = random.randint(2, n - 1)
+        x = pow(a, d, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(s - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        else:
+            return False
+    return True
+
+# Function to generate a potential prime number candidate
+def generate_prime_candidate(length):
+    p = random.getrandbits(length)
+    p |= (1 << length - 1) | 1
+    return p
+
+# Function to generate a prime number close to the specified length
+def generate_prime(length):
+    p = generate_prime_candidate(length)
+    while not is_prime(p):
+        p = generate_prime_candidate(length)
+    return p
+
+# Function to generate RSA keys with a specified key length
+def generate_keys(key_length):
+    p = generate_prime(key_length // 4)
+    q = generate_prime(key_length // 4)
+    n = p * q
+    phi = (p - 1) * (q - 1)
+
+    e = random.randint(2, phi)  # Start from 2 to ensure coprimality with phi
+    while gcd(e, phi) != 1:
+        e = random.randint(2, phi)
+
+    d = modinv(e, phi)
+    return ((e, n), (d, n))
+
+# Function to encrypt a message
+def encrypt(m, public_key):
+    e, n = public_key
+    return pow(m, e, n)
+
+# Function to decrypt a message
+def decrypt(c, private_key):
+    d, n = private_key
+    return pow(c, d, n)
+
+# Function to encode a message into a list of integers representing the ASCII codes of characters
+def encode_message(message):
+    return [ord(char) for char in message]
+
+# Function to decode a message encoded into a string of characters
+def decode_message(encoded_message):
+    return ''.join(chr(char) for char in encoded_message)
+
+# This part of the Python program that implements effectively the RSA algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
+print("The present Python program will demonstrate the effectiveness of a right implementation of the RSA asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm RSA uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
+
+print("a: 1024 bits.")
+print("b: 2048 bits.")
+print("c: 3072 bits.")
+print("d: 4096 bits.")
+print("e: 7680 bits.")
+print("f: 8192 bits.\n")
+
+print("The standard key sizes and standard message length showed above are used by the RSA asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this RSA asymmetric encryption and decryption algorithm.\n")
+
+print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that RSA asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the RSA asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths:\n")
+
+print("a: 1024 bits.")
+print("b: 2048 bits.")
+print("c: 3072 bits.")
+print("d: 4096 bits.")
+print("e: 7680 bits.")
+print("f: 8192 bits.\n") 
 
 print("For that purpose, please specify and choose a standard message length from the list shown above:")
 user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
 
 if user_response_standard_message_length == "a":
-    user_response_message_length = 256
+    user_response_message_length = 128
 elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
+    user_response_message_length = 256
 elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
+    user_response_message_length = 384
 elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
+    user_response_message_length = 512
 elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
+    user_response_message_length = 960
 elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
+    user_response_message_length = 1024
 
 while user_response_standard_message_length not in {"a", "b", "c", "d", "e", "f"}:
     print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
@@ -910,17 +517,17 @@ print("For that purpose, please specify and choose a standard key size from the 
 user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
 
 if user_response_standard_key_size == "a":
-    user_response_key_size = 256*8
+    user_response_key_size = 128*8
 elif user_response_standard_key_size == "b":
-    user_response_key_size = 384*8
+    user_response_key_size = 256*8
 elif user_response_standard_key_size == "c":
-    user_response_key_size = 512*8
+    user_response_key_size = 384*8
 elif user_response_standard_key_size == "d":
-    user_response_key_size = 768*8
+    user_response_key_size = 512*8
 elif user_response_standard_key_size == "e":
-    user_response_key_size = 1024*8
+    user_response_key_size = 960*8
 elif user_response_standard_key_size == "f":
-    user_response_key_size = 2048*8
+    user_response_key_size = 1024*8
 
 while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
     print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
@@ -937,81 +544,72 @@ while True:
         user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
 
 if user_response_standard_message_length == "a":
-    user_response_message_length = 256
+    user_response_message_length = 128
 elif user_response_standard_message_length == "b":
-    user_response_message_length = 384
+    user_response_message_length = 256
 elif user_response_standard_message_length == "c":
-    user_response_message_length = 512
+    user_response_message_length = 384
 elif user_response_standard_message_length == "d":
-    user_response_message_length = 768
+    user_response_message_length = 512
 elif user_response_standard_message_length == "e":
-    user_response_message_length = 1024
+    user_response_message_length = 960
 elif user_response_standard_message_length == "f":
-    user_response_message_length = 2048
+    user_response_message_length = 1024
 
 if user_response_standard_key_size == "a":
+    user_response_key_size = 128*8
+elif user_response_standard_key_size == "b":
     user_response_key_size = 256*8
-elif user_response_standard_key_size == "b":
-    user_response_key_size = 384*8
 elif user_response_standard_key_size == "c":
-    user_response_key_size = 512*8
+    user_response_key_size = 384*8
 elif user_response_standard_key_size == "d":
-    user_response_key_size = 768*8
+    user_response_key_size = 512*8
 elif user_response_standard_key_size == "e":
-    user_response_key_size = 1024*8
+    user_response_key_size = 960*8
 elif user_response_standard_key_size == "f":
-    user_response_key_size = 2048*8
+    user_response_key_size = 1024*8
 
 if user_response_standard_key_size == "a":
-    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
+    msg = input("Enter a message that contains maximum 128 characters, spaces included: ")
 elif user_response_standard_key_size == "b":
-    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
+    msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
 elif user_response_standard_key_size == "c":
-    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
+    msg = input("Enter a message that contains maximum 384 characters, spaces included: ")
 elif user_response_standard_key_size == "d":
-    msg = input("Enter a message that contains maximum 768 characters, spaces included: ")
+    msg = input("Enter a message that contains maximum 512 characters, spaces included: ")
 elif user_response_standard_key_size == "e":
-    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
+    msg = input("Enter a message that contains maximum 960 characters, spaces included: ")
 elif user_response_standard_key_size == "f":
-    msg = input("Enter a message that contains maximum 2048 characters, spaces included: ")
+    msg = input("Enter a message that contains maximum 1024 characters, spaces included: ")
 
 while len(msg) > user_response_message_length:
     print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
     msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")
 
-if user_response_standard_key_size == "a":
-    q=random.randint(pow(2, 900),pow(2, 2048))
-elif user_response_standard_key_size == "b":
-    q=random.randint(pow(2, 900),pow(2, 3072))
-elif user_response_standard_key_size == "c":
-    q=random.randint(pow(2, 900),pow(2, 4096))
-elif user_response_standard_key_size == "d":
-    q=random.randint(pow(2, 900),pow(2, 6144))
-elif user_response_standard_key_size == "e":
-    q=random.randint(pow(2, 900),pow(2, 8192))
-elif user_response_standard_key_size == "f":
-    q=random.randint(pow(2, 900),pow(2, 16384))
+print("Generating RSA keys...")
+public_key, private_key = generate_keys(user_response_key_size // 4)
+print("RSA keys generated successfully.")
 
-print("Generating El-Gamal keys...")
-g = random.randint(2, q)
-key = gen_key(q)
-h = power(g, key, q)
-print("El-Gamal keys generated successfully.")
+message = msg
+encoded_message = encode_message(message)
+encrypted_message = [encrypt(char, public_key) for char in encoded_message]
+decrypted_message = [decrypt(char, private_key) for char in encrypted_message]
+decoded_message = decode_message(decrypted_message)
 
-print("\ng used=", g)
-print("g^a used=", h)
+print("\nInitial message:")
+print(message)
+print("\nPublic key:")
+print(public_key)
+print("\nPrivate key:")
+print(private_key)
+print("\nEncoded message (encrypted by public key):")
+print(encrypted_message)
+print("\nDecoded message (decrypted by private key):")
+print(decoded_message) 
 
-ct, p = encryption(msg, q, h, g)
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
+Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme RSA: 
 
-pt = decryption(ct, p, key, q)
-d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
+18-03-2024 15:38
 
-Date des modifications réalisées, en lien avec la modification #1 du code Python implémentant l'algorithme El-Gamal: 
-
-20-03-2024, à 12:57
-
-- Version du code Python implémentant l'algorithme El-Gamal, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 6
+- Version du code Python implémentant l'algorithme RSA, suite à la réalisation de la modification #1 du code Python implémentant cet algorithme: version 3
 

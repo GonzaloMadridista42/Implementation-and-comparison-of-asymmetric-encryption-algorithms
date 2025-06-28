@@ -1,95 +1,73 @@
-print("The present Python program will demonstrate the effectiveness of a right implementation of the RSA asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm RSA uses a certain standard lenght of clear and plein messages proposed by international organisations around the world, these standard message lenght are the following ones, determined in number of bits:\n")
-
-print("- 2048 bits.")
-print("- 3072 bits.")
-print("- 4096 bits.")
-print("- 6144 bits.")
-print("- 8192 bits.")
-print("- 16384 bits.\n")
-
-print("The standard message lenght showed above are used by the RSA asymmetric encryption and decryption algorithm for the execution of the encryption and decryption process performed by that assymetric algorithm, using prime integer numbers that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard message lenght showed above are used also for specifying the size of the message that must be first encrypted and then decrypted by this RSA asymmetric encryption and decryption algorithm.\n")
-
-print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that RSA asymmetric encryption and decryption algorithm, needs to know which standard message lenght will be used by the RSA asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard message lenght:\n")
-
-print("a: 2048 bits.")
-print("b: 3072 bits.")
-print("c: 4096 bits.")
-print("d: 6144 bits.")
-print("e: 8192 bits.")
-print("f: 16384 bits.\n") 
-
-print("For that purpose, please specify and chose a standard message lenght from the list showed out above:")
-user_reponse_standard_message_lenght = input("Enter your choice (a, b, c, d, e, or f): ")
-
-while user_response not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response = input("Enter your choice (a, b, c, d, e, or f): ")
-
 if user_reponse == "a":
-   user_reponse_message=input("Please write down a message that contains 256 characters, including spaces: ")
-   user_reponse_message_lenght=mesurer la longueur, en nombre de bits, de la variable user_reponse_message   
-
-   Tant que longueur de la variable user_reponse_message>2048 faire    
-      Écrire("The message written down has more than 256 characters, including spaces!")
-      Écrire("Please write down a message that contains 256 characters, including spaces:")
-
-   Si(longueur de la variable user_reponse_message<=2048) alors
-   go to : print("For that purpose, please specify and chose a standard key size from the list showed out above:")     
-   
+   def generate_prime(length=128):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
 elif user_reponse == "b":
-   user_reponse_message=input("Please write down a message that contains 384 characters, including spaces: ")
-   user_reponse_message_lenght=mesurer la longueur, en nombre de bits, de la variable user_reponse_message   
-
-   Tant que longueur de la variable user_reponse_message>3072 faire    
-      Écrire("The message written down has more than 384 characters, including spaces!")
-      Écrire("Please write down a message that contains 384 characters, including spaces:")      
-   
-   Si(longueur de la variable user_reponse_message<=3072) alors
-   go to : print("For that purpose, please specify and chose a standard key size from the list showed out above:") 
-
+     def generate_prime(length=256):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
 elif user_reponse == "c":
-   user_reponse_message=input("Please write down a message that contains 512 characters, including spaces: ")
-   user_reponse_message_lenght=mesurer la longueur, en nombre de bits, de la variable user_reponse_message   
-
-   Tant que longueur de la variable user_reponse_message>4096 faire    
-      Écrire("The message written down has more than 512 characters, including spaces!")
-      Écrire("Please write down a message that contains 512 characters, including spaces:")
-
-   Si(longueur de la variable user_reponse_message<=4096) alors
-   go to : print("For that purpose, please specify and chose a standard key size from the list showed out above:")    
-  
+     def generate_prime(length=384):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
 elif user_reponse == "d":
-   user_reponse_message=input("Please write down a message that contains 768 characters, including spaces: ")
-   user_reponse_message_lenght=mesurer la longueur, en nombre de bits, de la variable user_reponse_message   
-
-   Tant que longueur de la variable user_reponse_message>6144 faire    
-      Écrire("The message written down has more than 768 characters, including spaces!")
-      Écrire("Please write down a message that contains 768 characters, including spaces:")
-
-   Si(longueur de la variable user_reponse_message<=6144) alors
-   go to : print("For that purpose, please specify and chose a standard key size from the list showed out above:")      
-      
+     def generate_prime(length=512):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
 elif user_reponse == "e":
-   user_reponse_message=input("Please write down a message that contains 1024 characters, including spaces: ")
-   user_reponse_message_lenght=mesurer la longueur, en nombre de bits, de la variable user_reponse_message   
-
-   Tant que longueur de la variable user_reponse_message>8192 faire    
-      Écrire("The message written down has more than 1024 characters, including spaces!")
-      Écrire("Please write down a message that contains 1024 characters, including spaces:")  
-
-   Si(longueur de la variable user_reponse_message<=8192) alors
-   go to : print("For that purpose, please specify and chose a standard key size from the list showed out above:") 
-
+     def generate_prime(length=960):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
 elif user_reponse == "f":
-   user_reponse_message=input("Please write down a message that contains 2048 characters, including spaces: ")
-   user_reponse_message_lenght=mesurer la longueur, en nombre de bits, de la variable user_reponse_message   
-
-   Tant que longueur de la variable user_reponse_message>16384 faire    
-      Écrire("The message written down has more than 2048 characters, including spaces!")
-      Écrire("Please write down a message that contains 2048 characters, including spaces:")
-   
-   Si(longueur de la variable user_reponse_message<=16384) alors
-   go to : print("For that purpose, please specify and chose a standard key size from the list showed out above:") 
-   
-
+     def generate_prime(length=1024):
+       # Bit length calculated in terms of number of bits that has the message
+       desired_bit_length = length * 8
+    
+       # Divide by 4 to get the bit length for each component (e, n) or (d, n)
+       bit_length = desired_bit_length // 4
+    
+       p = 4
+       while not is_prime(p):
+          p = generate_prime_candidate(bit_length)
+       return p
 
