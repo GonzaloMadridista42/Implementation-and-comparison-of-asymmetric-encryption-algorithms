@@ -1,0 +1,21 @@
+Faits saillants sur la génération de clés publiques et privées, ainsi que sur l'encryptage et le décryptage de messages clairs, en utilisant les algorithmes asymétriques RSA, El-Gamal et ECC (Version hybride AES-GMC):
+
+Pour que le processus de création/génération de clés publiques et privées, et celui de l'encryptage et de décryptage de messages clairs, soit efficace avec l'algorithme RSA, il faut satisfaire les points suivants:
+
+-La taille du message clair, en nombre de caractères et le nombre de bits total qu'occupe ce message, soit suffisamment énorme pour provoquer la génération d'une clé publique gigantesque, dont le nombre de type exposant qui l'a généré (valeur de la clé publique appliquée au logarithme base 2) soit d'au moins 2048 bits. 
+
+-Le message clair doit être suffisamment long pour générer un nombre premier exposant d'au moins 2048 bits, qui va générer une clé privée de taille énorme, qui garantira la sécurité de ce message clair.
+
+Exemple: 
+
+Pour le message suivant : "This is my very first plain message, that must be first encrypted and then decrypted by the assymetric El-Gamal algorithm!", les algorithmes RSA et El-Gamal ont généré un nombre premier gigantesque, dont le nombre de type exposant a une valeur de 293 bits, ce qui est insuffisant pour garantir une sécurité optimale aux processus d'encryptage et de décryptage de message clairs.
+
+Pour obtenir des seuils de sécurité plus significatifs, il faut utiliser un message encore plus long que le message "This is my very first plain message, that must be first encrypted and then decrypted by the assymetric El-Gamal algorithm!", qui va générer un nombre premier colossal, dont le nombre de type exposant qui l'a généré ait une valeur d'au moins 2048 bits.
+
+Ceci ayant été dit, et dans le cas de l'exemple montré ci-dessus, il faudrait fournir en total, 2048/293=6.98976=7 lignes de même longueur que le message "This is my very first plain message, that must be first encrypted and then decrypted by the assymetric El-Gamal algorithm!".
+
+Cela veut dire qu'il faut fournir 6 autres lignes de message clair de la même longueur que le message montré ci-dessus, afin d'implémenter efficacement l'algorithme RSA, avec un message clair 7 fois plus long que le message "This is my very first plain message, that must be first encrypted and then decrypted by the assymetric El-Gamal algorithm!"!  
+
+
+ 
+ 

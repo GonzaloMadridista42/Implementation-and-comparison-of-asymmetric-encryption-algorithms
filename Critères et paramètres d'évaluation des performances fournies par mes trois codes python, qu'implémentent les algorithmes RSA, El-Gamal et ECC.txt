@@ -1,0 +1,50 @@
+Gonzalo Romero:
+chatgpt, je veux que tu me donnes une liste complète qui permet d'évaluer mes trois codes python DE MANIÈRE INFORMATIQUE, pas physique!
+
+ChatGPT:
+Bien sûr, voici une liste plus détaillée d'éléments spécifiques que vous pouvez mesurer et évaluer pour les performances informatiques de vos codes Python implémentant les algorithmes RSA, El-Gamal et ECC :
+
+Temps d'exécution :
+
+Mesurez le temps nécessaire pour effectuer le chiffrement et le déchiffrement pour chaque algorithme.
+
+Utilisation de la mémoire :
+
+Mesurez l'utilisation de la mémoire pendant l'exécution de vos codes.
+Utilisez des outils tels que memory_profiler pour obtenir des informations détaillées.
+Taille des clés générées :
+
+Mesurez la taille des clés générées par chaque algorithme.
+Complexité algorithmique :
+
+Analysez la complexité algorithmique (notation big-O) pour le chiffrement et le déchiffrement de chaque algorithme.
+Optimisations Python :
+
+Explorez et implémentez des optimisations spécifiques à Python pour améliorer les performances.
+Gestion des grandes quantités de données :
+
+Évaluez la performance lors du traitement de grandes quantités de données.
+Comparaison des tailles de clés :
+
+Comparez la taille des clés générées par chaque algorithme pour une même longueur de clé (par exemple, 2048 bits).
+
+Comparaison des temps d'exécution avec différentes tailles de clés :
+
+Mesurez le temps d'exécution avec différentes tailles de clés pour évaluer l'impact de la taille des clés sur les performances.
+Stabilité et fiabilité :
+
+Vérifiez la stabilité et la fiabilité de vos codes sur plusieurs exécutions.
+Gestion des erreurs et exceptions :
+
+Évaluez la manière dont vos codes gèrent les erreurs et les exceptions.
+Tests unitaires :
+Mettez en place des tests unitaires pour s'assurer de la fiabilité des différentes parties de votre code.
+Maintenance et lisibilité du code :
+Évaluez la facilité de maintenance et de compréhension du code source.
+Documentation :
+Assurez-vous que le code est bien documenté pour faciliter sa compréhension et sa maintenance.
+Évolutivité :
+Évaluez la capacité de vos codes à gérer des charges de travail plus importantes.
+Répétabilité des Tests :
+Assurez-vous que vos tests sont reproductibles et fournissent des résultats cohérents.
+En mesurant ces aspects, vous pourrez obtenir une évaluation complète des performances informatiques de vos implémentations d'algorithmes cryptographiques en Python.
