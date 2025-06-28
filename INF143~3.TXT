@@ -1,16 +1,13 @@
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-import ecdsa
-import os
+# Importing the random library to generate random numbers
+import random
+
+# Importing the sys module to increase the recursion limit
+import sys  # The sys module provides access to some variables used or maintained by the Python interpreter and to functions that interact strongly with the interpreter.
 
 # importing the psutil library to measure the memory consumption that takes the RSA python code, to perform key generation, encoding and decoding of messages
 import psutil
 
-# Importing the math library to calculate the size of the generated public and private ECC keys
+# Importing the math library to calculate the size of the generated public and private El-Gamal keys
 import math
 
 # Function to measure memory usage
@@ -21,62 +18,60 @@ def get_memory_usage():
 # Example of using the function
 before_memory = get_memory_usage()
 
-# Generate an ECC key pair
-def generate_ecc_key_pair(curve):
-    private_key = ec.generate_private_key(curve, default_backend())
-    public_key = private_key.public_key()
-    return private_key, public_key
+# Increase the recursion limit
+sys.setrecursionlimit(10**6)
 
-# Calculate ECC shared secret
-def calculate_shared_secret(private_key, public_key):
-    shared_secret = private_key.exchange(ec.ECDH(), public_key)
-    return shared_secret
+# To find gcd of two numbers
+def gcd(a, b):
+    if a < b:
+        return gcd(b, a)
+    elif a % b == 0:
+        return b
+    else:
+        return gcd(b, a % b)
 
-# Generate a derived secret key from the shared secret
-def derive_secret_key(shared_secret, length):
-    derived_key = HKDF(
-        algorithm=hashes.SHA256(),
-        length=length,
-        salt=None,
-        info=b'ECC Key Derivation',
-        backend=default_backend()
-    ).derive(shared_secret)
-    return derived_key
+# For key generation i.e. large random number
+def gen_key(q):
+    key = random.randint(pow(2, 900), q)
+    while gcd(q, key) != 1:
+        key = random.randint(pow(2, 900), q)
+    return key
 
-# Encrypt a message with AES-GCM
-def encrypt_message_AES_GCM(message, key):
-    iv = os.urandom(16)
-    encryptor = Cipher(
-        algorithms.AES(key),
-        modes.GCM(iv),
-        backend=default_backend()
-    ).encryptor()
-    ciphertext = encryptor.update(message.encode('utf-8')) + encryptor.finalize()
-    tag = encryptor.tag
-    return (ciphertext, iv, tag)
+def power(a, b, c):
+    x = 1
+    y = a
+    while b > 0:
+        if b % 2 == 0:
+            x = (x * y) % c
+        y = (y * y) % c
+        b = b // 2  # Utilisation de la division entière //
+    return x % c
 
-# Decrypt a message with AES-GCM
-def decrypt_message_AES_GCM(ciphertext, iv, tag, key):
-    decryptor = Cipher(
-        algorithms.AES(key),
-        modes.GCM(iv, tag),
-        backend=default_backend()
-    ).decryptor()
-    plaintext = decryptor.update(ciphertext) + decryptor.finalize()
-    return plaintext
+import time
 
-# This part of the Python program that implements effectively the ECC algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
-print("The present Python program will demonstrate the effectiveness of a right implementation of the ECC asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm ECC uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
+# For asymmetric encryption
+def encryption(msg, q, h, g):
+    ct = []
+    k = gen_key(q)
+    s = power(h, k, q)
+    p = power(g, k, q)
+    for i in range(0, len(msg)):
+        ct.append(msg[i])
+    for i in range(0, len(ct)):
+        ct[i] = s * ord(ct[i])
 
-print("a: 256 bits.")
-print("b: 384 bits.")
-print("c: 409 bits.")
-print("d: 512 bits.")
-print("e: 521 bits.")
-print("f: 571 bits.\n")
+    return ct, p, s
+    
+# For decryption
+def decryption(ct, p, key, q):
+    pt = []
+    h = power(p, key, q)
+    for i in range(0, len(ct)):
+        pt.append(chr(int(ct[i] / h)))
+    return pt
 
-print("The standard key sizes and standard message length showed above are used by the ECC asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are not used for specifying the size of the message that must be first encrypted and then decrypted by this ECC asymmetric encryption and decryption algorithm.\n")
-print("The reason of that statement is simple: the ECC assymetric encryption and decryption algorithm only need the key sizes showed above, to encrypt and decrypt either short, medium and long messages, those messages usually have the following standard message lenght:")
+# This part of the Python program that implements effectively the El-Gamal algorithm, displays the presentation of that Python program (that takes charge of the right choosing of the offered options described below, for the standard key sizes)
+print("The present Python program will demonstrate the effectiveness of a right implementation of the El-Gamal asymmetric encryption and decryption algorithm. For that purpose, the implementation of that asymmetric algorithm El-Gamal uses a certain standard key sizes and standard message length determined by international organisations around the world, these standard key sizes and standard message length are the following ones:\n")
 
 print("a: 2048 bits.")
 print("b: 3072 bits.")
@@ -85,24 +80,16 @@ print("d: 6144 bits.")
 print("e: 8192 bits.")
 print("f: 16384 bits.\n")
 
+print("The standard key sizes and standard message length showed above are used by the El-Gamal asymmetric encryption and decryption algorithm for the generation and creation of the public and private keys, and for the calculations related to the encryption and decryption process, that are immense and colossal prime numbers generated randomly. However, for the purpose of the present Python program, these standard key sizes showed out above are used also for specifying the size of the message that must be first encrypted and then decrypted by this El-Gamal asymmetric encryption and decryption algorithm.\n")
 
-print("That statement said, the present Python program, in order to demonstrate the effectiveness of the right implementation of that ECC asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the ECC asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths showed below:\n")
+print("The present Python program, in order to demonstrate the effectiveness of the right implementation of that El-Gamal asymmetric encryption and decryption algorithm, needs to know which standard key size and which standard message length will be used by the El-Gamal asymmetric encryption and decryption algorithm, taking into account that you must choose one of the following standard key sizes and standard message lengths:\n")
 
-print("Standard message lenghts:")
 print("a: 2048 bits.")
 print("b: 3072 bits.")
 print("c: 4096 bits.")
 print("d: 6144 bits.")
 print("e: 8192 bits.")
-print("f: 16384 bits.\n")
-
-print("Standard key sizes:")
-print("a: 256 bits.")
-print("b: 304 bits.")
-print("c: 409 bits.")
-print("d: 512 bits.")
-print("e: 521 bits.")
-print("f: 571 bits.\n") 
+print("f: 16384 bits.\n") 
 
 print("For that purpose, please specify and choose a standard message length from the list shown above:")
 user_response_standard_message_length = input("Enter your choice (a, b, c, d, e, or f): ")
@@ -128,17 +115,17 @@ print("For that purpose, please specify and choose a standard key size from the 
 user_response_standard_key_size = input("Enter your choice (a, b, c, d, e, or f): ")
 
 if user_response_standard_key_size == "a":
-    user_response_key_size = 256
+    user_response_key_size = 256*8
 elif user_response_standard_key_size == "b":
-    user_response_key_size = 384
+    user_response_key_size = 384*8
 elif user_response_standard_key_size == "c":
-    user_response_key_size = 409
+    user_response_key_size = 512*8
 elif user_response_standard_key_size == "d":
-    user_response_key_size = 512
+    user_response_key_size = 768*8
 elif user_response_standard_key_size == "e":
-    user_response_key_size = 521
+    user_response_key_size = 1024*8
 elif user_response_standard_key_size == "f":
-    user_response_key_size = 571
+    user_response_key_size = 2048*8
 
 while user_response_standard_key_size not in {"a", "b", "c", "d", "e", "f"}:
     print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
@@ -153,6 +140,32 @@ while True:
         print("Please choose the same option (a, b, c, d, e, or f) for both message length and key size.")
         user_response_standard_message_length = input("Enter your choice for message length (a, b, c, d, e, or f): ")
         user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
+
+if user_response_standard_message_length == "a":
+    user_response_message_length = 256
+elif user_response_standard_message_length == "b":
+    user_response_message_length = 384
+elif user_response_standard_message_length == "c":
+    user_response_message_length = 512
+elif user_response_standard_message_length == "d":
+    user_response_message_length = 768
+elif user_response_standard_message_length == "e":
+    user_response_message_length = 1024
+elif user_response_standard_message_length == "f":
+    user_response_message_length = 2048
+
+if user_response_standard_key_size == "a":
+    user_response_key_size = 256*8
+elif user_response_standard_key_size == "b":
+    user_response_key_size = 384*8
+elif user_response_standard_key_size == "c":
+    user_response_key_size = 512*8
+elif user_response_standard_key_size == "d":
+    user_response_key_size = 768*8
+elif user_response_standard_key_size == "e":
+    user_response_key_size = 1024*8
+elif user_response_standard_key_size == "f":
+    user_response_key_size = 2048*8
 
 if user_response_standard_key_size == "a":
     msg = input("Enter a message that contains maximum 256 characters, spaces included: ")
@@ -169,135 +182,65 @@ elif user_response_standard_key_size == "f":
 
 while len(msg) > user_response_message_length:
     print(f"The message written down has more than {user_response_message_length} characters, including spaces!")
-    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")    
+    msg = input(f"Please write down a message that contains {user_response_message_length} characters, including spaces:")
 
-print("Now that a standard key size and a standanrd message lenght has been chosed by the user, now the ECC assymetric encryption and decryption algorithm needs now to know which elliptic curve will be used, to perform all the process associated to this ECC assymetric algorithm, like the creation of public and private keys, the creation of shared keys and the encryption and decryption of messages.")
-print("In order to encrypt and decrypt clear and plain messages, the ECC assymetric encryption and decryption algorithm, implemented by the present program, needs to take one of the following elliptic curves, among an immense range of options determined by international organisations:")
+if user_response_standard_key_size == "a":
+    q=random.randint(pow(2, 900),pow(2, 2048))
+elif user_response_standard_key_size == "b":
+    q=random.randint(pow(2, 900),pow(2, 3072))
+elif user_response_standard_key_size == "c":
+    q=random.randint(pow(2, 900),pow(2, 4096))
+elif user_response_standard_key_size == "d":
+    q=random.randint(pow(2, 900),pow(2, 6144))
+elif user_response_standard_key_size == "e":
+    q=random.randint(pow(2, 900),pow(2, 8192))
+elif user_response_standard_key_size == "f":
+    q=random.randint(pow(2, 900),pow(2, 16384))
 
-print("a: SECP256R1.")
-print("b: SECP384R1.")
-print("c: SECT409R1.")
-print("d: BrainpooolP512R1.")
-print("e: SECP521R1.")
-print("f: SECT571K1.\n")
-
-print("For that purpose, please specify and choose an elliptic curve using the standard key size chosen above, from the list shown above:")
-user_response_standard_elliptic_curve = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_elliptic_curve == "a":
-    user_response_elliptic_curve = ec.SECP256R1()
-elif user_response_standard_elliptic_curve == "b":
-    user_response_elliptic_curve = ec.SECP384R1()
-elif user_response_standard_elliptic_curve == "c":
-    user_response_elliptic_curve = ec.SECT409R1()
-elif user_response_standard_elliptic_curve == "d":
-    user_response_elliptic_curve = ec.BrainpoolP512R1()
-elif user_response_standard_elliptic_curve == "e":
-    user_response_elliptic_curve = ec.SECP521R1()
-elif user_response_standard_elliptic_curve == "f":
-    user_response_elliptic_curve = ec.SECT571K1()
-
-while user_response_standard_elliptic_curve not in {"a", "b", "c", "d", "e", "f"}:
-    print("Invalid option. Please choose a valid option (a, b, c, d, e, or f).")
-    user_response_standard_elliptic_curve = input("Enter your choice (a, b, c, d, e, or f): ")
-
-if user_response_standard_elliptic_curve == "a":
-    user_response_elliptic_curve = ec.SECP256R1()
-elif user_response_standard_elliptic_curve == "b":
-    user_response_elliptic_curve = ec.SECP384R1()
-elif user_response_standard_elliptic_curve == "c":
-    user_response_elliptic_curve = ec.SECT409R1()
-elif user_response_standard_elliptic_curve == "d":
-    user_response_elliptic_curve = ec.BrainpoolP512R1()
-elif user_response_standard_elliptic_curve == "e":
-    user_response_elliptic_curve = ec.SECP521R1()
-elif user_response_standard_elliptic_curve == "f":
-    user_response_elliptic_curve = ec.SECT571K1()
-
-# Checking the consistency between the key size and the elliptic curve to chose
-while True:
-    if user_response_standard_elliptic_curve == user_response_standard_key_size:
-        break
-    else:
-        print("Error: The selected kwy size must match the selected elliptic curve.")
-        print("Please choose the same option (a, b, c, d, e, or f) for both key size and elliptic curve.")
-        user_response_standard_elliptic_curve = input("Enter your choice for standard elliptic curve (a, b, c, d, e, or f): ")
-        user_response_standard_key_size = input("Enter your choice for key size (a, b, c, d, e, or f): ")
-
-# Generate an ECC key pair
 before_memory = get_memory_usage()
-private_key, public_key = generate_ecc_key_pair(user_response_elliptic_curve)
+print("Generating El-Gamal keys...")
+g = random.randint(2, q)
+key = gen_key(q)
+h = power(g, key, q)
+print("El-Gamal keys generated successfully.")
+
 after_memory = get_memory_usage()
 memory_used = after_memory - before_memory
 
-# Display information
-print("\nClear Message :")
-print(msg)
+print("\ng used=", g)
+print("g^a used=", h)
 
-print("\nECC Private Key:")
-print(private_key.private_numbers().private_value)
+ct, p, s = encryption(msg, q, h, g)
+print("g^k used= ", p)
+print("g^ak used= ", s)
 
-print("\nECC Public Key :")
-print(public_key.public_numbers().x)
+print("\nOriginal Message=", msg)
+print("\nEncrypted Message=", ct)
 
-# Calculate the shared secret
-shared_secret = calculate_shared_secret(private_key, public_key)
-
-# Derivation of the secret key
-derived_key = derive_secret_key(shared_secret, 32)  # Clé AES 256 bits
-
-print("\nCiphertext pubKey:")
-print(derived_key.hex())
-
-# Encryption key
-print("\nEncryption Key:")
-print(derived_key.hex())
-
-# Decryption key
-print("\nDecryption Key:")
-print(derived_key.hex())
-
-# Encrypt the message with AES-GCM
-ciphertext, iv, tag = encrypt_message_AES_GCM(msg, derived_key)
-
-# Display the encrypted message
-print("\nEncrypted Message:")
-print({
-    'ciphertext': ciphertext.hex(),
-    'nonce': iv.hex(),
-    'authTag': tag.hex(),
-    'ciphertextPubKey': (public_key.public_numbers().x, public_key.public_numbers().y)
-})
-
-# Decrypt the message with AES-GCM
-decrypted_message = decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
-
-# Display the decrypted message
-print("\nDecrypted Message:")
-print(decrypted_message.decode('utf-8'))
+pt = decryption(ct, p, key, q)
+d_msg = ''.join(pt)
+print("\nDecrypted Message=", d_msg)
 
 after_memory = get_memory_usage()
 memory_used = after_memory - before_memory
 
 if __name__ == '__main__':
-    # Code block that measures the size of the keys generated by the ECC algorithm 
+    # Code block that measures the size of the keys generated by the python code implementing the RSA algorithm 
     # Check if keys have already been generated
     if 'public_key' not in globals() or 'private_key' not in globals():
         # If keys have not been generated, generate a new key pair
-        private_key, public_key = generate_ecc_key_pair(user_response_elliptic_curve)
+        g = random.randint(2, q)
+        key = gen_key(q)
+        h = power(g, key, q)
     else:
         # If keys already exist, retrieve the existing keys
         pass
 
-    # Extract private key value and calculate its size in bits
-    private_key_value = private_key.private_numbers().private_value
-    private_key_size = math.log(private_key_value, 2)
-
-    # Extract public key value and calculate its size in bits
-    public_key_value = public_key.public_numbers().x
-    public_key_size = math.log(public_key_value, 2)
+    # Calculate the size of the public and private keys in bits
+    public_key_size = math.log2(g)
+    private_key_size = math.log2(h)
 
     print("\nThe generated public key (size in bits):")
-    print(public_key_value, "(", public_key_size, "bits)")
+    print(g, "(", public_key_size, "bits)")
     print("\nThe generated private key (size in bits):")
-    print(private_key_value, "(", private_key_size, "bits)")
+    print(h, "(", private_key_size, "bits)")

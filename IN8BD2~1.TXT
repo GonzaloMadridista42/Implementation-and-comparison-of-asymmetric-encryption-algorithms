@@ -33,12 +33,18 @@ def gcd(a, b):
     else:
         return gcd(b, a % b)
 
-# For key generation i.e. large random number
+# Function to generate the public and the private keys, for encryption and decryption of messages
 def gen_key(q):
-    key = random.randint(pow(2, 900), q)
+    key = random.randint(1, q - 1)
+     # Generate a key in the range [1, q - 1]
     while gcd(q, key) != 1:
-        key = random.randint(pow(2, 900), q)
-    return key
+        key = random.randint(1, q - 1)  # Regenerate key until gcd(q, key) == 1
+    
+    # Calculate key sizes
+    public_key_size = key.bit_length() 
+    private_key_size = q.bit_length()  
+    
+    return key, q, public_key_size, private_key_size  # Return key, q, and key sizes as a tuple
 
 def power(a, b, c):
     x = 1
@@ -47,15 +53,14 @@ def power(a, b, c):
         if b % 2 == 0:
             x = (x * y) % c
         y = (y * y) % c
-        b = b // 2  # Utilisation de la division entière //
+        b = b // 8  # Utilisation de la division entière //
+    
     return x % c
-
-import time
 
 # For asymmetric encryption
 def encryption(msg, q, h, g):
     ct = []
-    k = gen_key(q)
+    k, _, public_key_size, private_key_size = gen_key(q)
     s = power(h, k, q)
     p = power(g, k, q)
     for i in range(0, len(msg)):
@@ -203,7 +208,7 @@ elif user_response_standard_key_size == "f":
 before_memory = get_memory_usage()
 print("Generating El-Gamal keys...")
 g = random.randint(2, q)
-key = gen_key(q)
+key, q, public_key_size, private_key_size = gen_key(q)
 h = power(g, key, q)
 print("El-Gamal keys generated successfully.")
 
@@ -217,12 +222,12 @@ ct, p, s = encryption(msg, q, h, g)
 print("g^k used= ", p)
 print("g^ak used= ", s)
 
-print("\nOriginal Message=", msg)
-print("\nEncrypted Message=", ct)
+print("\nOriginal Message: ", msg)
+print("\nEncrypted Message: ", ct)
 
 pt = decryption(ct, p, key, q)
 d_msg = ''.join(pt)
-print("\nDecrypted Message=", d_msg)
+print("\nDecrypted Message: ", d_msg)
 
 after_memory = get_memory_usage()
 memory_used = after_memory - before_memory
@@ -232,7 +237,7 @@ def measure_key_generation(q):
     start_memory = get_memory_usage()
     start_time = time.time()
     g = random.randint(2, q)
-    key = gen_key(q)
+    key, q, public_key_size, private_key_size = gen_key(q)
     h = power(g, key, q)
     end_time = time.time()
     end_memory = get_memory_usage()
@@ -252,62 +257,194 @@ def measure_decryption(ct, p, key, q):
     end_time = time.time()
     return end_time - start_time
 
+# Function to generate a message of a given length
+def generate_message(user_response_message_length):
+    return ''.join(random.choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') for _ in range(user_response_message_length))
+
+# Function to generate 5 messages of the same length as the provided plaintext message
+def generate_test_messages(message, num_messages):
+    return [generate_message(len(message)) for _ in range(num_messages)]
+
+# Function to measure memory usage
+def measure_memory_usage():
+    process = psutil.Process()
+    memory_usage_kb = process.memory_info().rss / 1024  # Convert to kilobytes
+    if memory_usage_kb < 0.001:  # If memory usage is very low
+        return 0.0000001  # Display a value very close to zero
+    else:
+        return memory_usage_kb
+
+#Function to calculate the avalanche effect occurred just by changing the value of a single bit in a given message
+def calculate_avalanche_effect(key1, key2):
+    # Check if key2 is already an integer
+    if isinstance(key2, int):
+        key2_int = key2
+    else:
+        key2_int = int(''.join(map(str, key2)))
+
+    # Extract integers from the tuples
+    key1_int = int(''.join(map(str, key1)))
+
+    # Calculate the number of different bits between the two keys
+    diff_bits = bin(key1_int ^ key2_int).count('1')
+
+    # Calculate the percentage of avalanche effect
+    total_bits = max(key1_int.bit_length(), key2_int.bit_length())
+    avalanche_percentage = (diff_bits / total_bits) * 100
+
+    return avalanche_percentage
+
+# Function to randomly select a single bit of a given message, in order to change its value, for eventually measuring the avalanche effect caused by the change of the original value of that bit
+def select_random_digit(key_tuple):
+    # Convert each integer in the tuple to a string
+    key_str = ''.join(map(str, key_tuple))
+
+    # Select a random digit position
+    digit_position = random.randint(0, len(key_str) - 1)
+
+    # Return the selected digit
+    return key_str[digit_position]
+
+# Function to generate a new public and a new private key, using the firstly generated public and private keys, created by the first compilation of the El-Gamal python code
+def modify_key(key, random_digit):
+    # Convert the key to a string
+    key_str = str(key)
+    
+    # Generate a random digit position
+    digit_position = random.randint(0, len(key_str) - 1)
+    
+    # Create a list from the string
+    key_list = list(key_str)
+    
+    # Modify the digit at the random position with the provided random digit
+    key_list[digit_position] = str(random_digit)
+    
+    # Convert the modified list back to a string
+    modified_key_str = ''.join(key_list)
+    
+    # Convert the modified string back to an integer
+    modified_key = int(modified_key_str)
+    
+    return modified_key, digit_position
+
 if __name__ == '__main__':
-    # Code block that measures the algorithmic complexity of the keys generated and the encryption and decryption process provided by the Python code implementing the El-Gamal algorithm 
+    # Code block that measures the avalanche effect generated by the original public and private keys generated the very first time, then measures the avalanche effect generated by the modified public and private keys bit only one bit for each key, in both cases, this main measures the avalanche effect linked to the keys generation, encryption and decryption of clear and plain messages.
     # Check if keys have already been generated
     if 'g' not in globals() or 'key' not in globals():
-            # If keys have not been generated, generate a new key pair
-        q = random.randint(pow(2, 900), pow(2, user_response_key_size))
+        # If keys have not been generated, generate a new key pair using the initial message
+        key, q, public_key_size, private_key_size = gen_key(q)
         g = random.randint(2, q)
-        key = gen_key(q)
         h = power(g, key, q)
     else:
         # If keys already exist, retrieve the existing keys
         pass
+    
+    print("")
 
-    # Measure key generation complexity only if keys are generated
-    if 'g' in globals() and 'key' in globals():
-        # Measure the key generation complexity
-        key_gen_start_time = time.time()
-        g = random.randint(2, q)
-        key = gen_key(q)
-        h = power(g, key, q)
-        key_gen_end_time = time.time()
+    # Print the initial message
+    print("Initial Message:")
+    print(msg)
+    print()
 
-        key_gen_time = key_gen_end_time - key_gen_start_time
-        key_gen_memory = get_memory_usage()
+    # Print the initial message length
+    message_length = len(msg)  # Length of the initial message
+    print(f"Initial message length (including spaces): {message_length} characters")
 
-        key_gen_time_str = "{:.8f}".format(max(0.00000001, key_gen_time))
-        key_gen_memory_str = "{:.8f}".format(max(0.00000001, key_gen_memory))
+    # Print the content of the public and the private keys
+    print(f"Public key (g) content (unchanged public key): {g}")
+    print(f"Public key (h) content (unchanged public key): {h}")
+    print(f"Private key (g^k) content (unchanged public key): {p}")
+    print(f"Private key (g^ak) content (unchanged public key): {s}")
 
-        print("\nComplexity of key generation:")
-        print("Time taken:", key_gen_time_str, "seconds")
-        print("Memory used:", key_gen_memory_str, "KB")
+    # Print the length of the public and the private keys
+    print(f"Public key (g) length (unchanged public key): {g.bit_length()} bits")
+    print(f"Public key (h) length (unchanged public key): {h.bit_length()} bits")
+    print(f"Private key (g^k) length (unchanged public key): {p.bit_length()} bits")
+    print(f"Private key (g^ak) length (unchanged public key): {s.bit_length()} bits")
 
-    # Measure encryption complexity
-    print("\nMeasuring encryption complexity...")
-    encryption_start_time = time.time()
+    # Encryption of the initial message using El-Gamal
     ct, p, s = encryption(msg, q, h, g)
-    encryption_end_time = time.time()
+    print(f"\nEncrypted initial message (unchanged public and private keys): {ct}")
 
-    # Measure memory usage during encryption
-    encryption_memory_used = get_memory_usage()
-
-    encryption_time = encryption_end_time - encryption_start_time
-    encryption_time_str = "{:.8f}".format(max(0.00000001, encryption_time))
-    print("Encryption time:", encryption_time_str, "seconds")
-    print("Memory used during encryption:", "{:.8f}".format(encryption_memory_used), "KB")
-
-    # Measure decryption complexity
-    print("\nMeasuring decryption complexity...")
-    decryption_start_time = time.time()
+    # Decryption of the initial message using El-Gamal
     pt = decryption(ct, p, key, q)
-    decryption_end_time = time.time()
+    d_msg = ''.join(pt)
+    print(f"Decrypted initial message (unchanged public and private keys): {d_msg}")    
 
-    # Measure memory usage during decryption
-    decryption_memory_used = get_memory_usage()
+    # Calculate the avalanche effect for the public key
+    public_key_avalanche_percentage = calculate_avalanche_effect((g, h), public_key_size)
 
-    decryption_time = decryption_end_time - decryption_start_time
-    decryption_time_str = "{:.8f}".format(max(0.00000001, decryption_time))
-    print("Decryption time:", decryption_time_str, "seconds")
-    print("Memory used during decryption:", "{:.8f}".format(decryption_memory_used), "KB")
+    # Calculate the avalanche effect for the private key
+    private_key_avalanche_percentage = calculate_avalanche_effect((p, s), private_key_size)
+
+    # Display the avalanche effect percentages
+    print("\nAvalanche Effect for Public Key in % (unchanged public and private keys):", public_key_avalanche_percentage)
+    print("Avalanche Effect for Private Key in % (unchanged public and private keys):", private_key_avalanche_percentage)
+
+    # Select and display a random digit from the public key components
+    public_random_digit_g = select_random_digit((g,))
+    public_random_digit_h = select_random_digit((h,))
+    print(f"\nRandom digit from Public Key (g): {public_random_digit_g}")
+    print(f"Random digit from Public Key (h): {public_random_digit_h}")
+
+    # Select and display a random digit from the private key components
+    private_random_digit_p = select_random_digit((p,))
+    private_random_digit_s = select_random_digit((s,))
+    print(f"Random digit from Private Key (g^k): {private_random_digit_p}")
+    print(f"Random digit from Private Key (g^ak): {private_random_digit_s}")
+    
+    # Convert the random digit positions to integers
+    public_random_digit_g = int(public_random_digit_g)
+    public_random_digit_h = int(public_random_digit_h)
+    private_random_digit_p = int(private_random_digit_p)
+    private_random_digit_s = int(private_random_digit_s)
+
+    # Modify the public and private keys
+    modified_public_key_g = modify_key(g, public_random_digit_g)
+    modified_public_key_h = modify_key(h, public_random_digit_h)
+    modified_private_key_p = modify_key(p, private_random_digit_p)
+    modified_private_key_s = modify_key(s, private_random_digit_s)
+
+    # Print the content of the modified public and private keys
+    print(f"Public key (g) content (modified public key): {modified_public_key_g}")
+    print(f"Public key (h) content (modified public key): {modified_public_key_h}")
+    print(f"Private key (g^k) content (modified public key): {modified_private_key_p}")
+    print(f"Private key (g^ak) content (modified public key): {modified_private_key_s}")
+
+    # Print the length of the modified public and private keys
+    # Get the number of bits for modified_public_key_g
+    modified_public_key_g_bits = modified_public_key_g[0].bit_length()
+
+    # Get the number of bits for modified_public_key_h
+    modified_public_key_h_bits = modified_public_key_h[0].bit_length()
+
+    # Get the number of bits for modified_private_key_p
+    modified_private_key_p_bits = modified_private_key_p[0].bit_length()
+
+    # Get the number of bits for modified_private_key_s
+    modified_private_key_s_bits = modified_private_key_s[0].bit_length()
+
+    # Display the results
+    print(f"Modified Public key g length: {modified_public_key_g_bits} bits")
+    print(f"Modified Public key h length: {modified_public_key_h_bits} bits")
+    print(f"Modified Private key p length: {modified_private_key_p_bits} bits")
+    print(f"Modified Private key s length: {modified_private_key_s_bits} bits")
+
+    # Encryption of the initial message using the modified public key
+    encrypted_modified_public_key = [encryption(char, q, h, g) for char in msg]
+    print(f"\nEncrypted initial message (modified public key): {encrypted_modified_public_key}")
+
+    # Decryption of the initial message using the modified private key
+    decrypted_modified_private_key = [decryption(char[0], char[1], key, q) for char in encrypted_modified_public_key]
+    decoded_modified_private_key_message = ''.join([char[0] for char in decrypted_modified_private_key])  # Extract the first element from each tuple
+    print(f"Decrypted initial message (modified private key): {decoded_modified_private_key_message}")
+
+    # Calculate the avalanche effect for the modified public key
+    modified_public_key_avalanche_percentage = calculate_avalanche_effect((g,), public_key_size)
+
+    # Calculate the avalanche effect for the modified private key
+    modified_private_key_avalanche_percentage = calculate_avalanche_effect((p,), private_key_size)
+
+    # Display the avalanche effect percentages for the modified keys
+    print("\nAvalanche Effect for Modified Public Key in % (modified public and private keys):", modified_public_key_avalanche_percentage)
+    print("Avalanche Effect for Modified Private Key in % (modified public and private keys):", modified_private_key_avalanche_percentage)
