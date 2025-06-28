@@ -1,0 +1,10 @@
+Tailles des clés publiques et privées récommandées pour l'implémentation des algorithmes RSA, El Gamal et ECC (Version Hybride ECC-AES-GMC):
+
+Les voici les intervalles de tailles des clés publiques et privées récommandées et à utiliser, pour l'implémentation des algorithmes RSA, El Gamal et ECC (Version Hybride ECC-AES-GMC):
+
+1.- Pour l'implémentation de l'algorithme RSA: 2048 bits, 3072 bits, 4096 bits, 6144 bits et 8192 bits.
+
+2.- Pour l'implémentation de l'algorithme El-Gamal: 2048 bits, 3072 bits, 4096 bits, 6144 bits et 8192 bits.
+
+3.- Pour l'implémentation de l'algorithme ECC (Version Hybride ECC-AES-GMC): 224 bits, 256 bits, 414 bits, 448 bits et 521 bits.
+

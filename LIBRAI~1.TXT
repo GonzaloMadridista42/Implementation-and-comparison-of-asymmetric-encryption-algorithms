@@ -1,0 +1,25 @@
+Gonzalo:
+mon prof veut que j'implémente les algorithmes RSA,E-l-Gamal et ECC avec des blocs de données, et des clés privées et publiques de plusieurs tailles, 164 bits, 256 bits, et ainsi de suite!!
+
+ChatGPT:
+Bien compris ! Pour travailler avec des clés de différentes tailles et des blocs de données, voici quelques suggestions pour chacun des algorithmes :
+
+RSA :
+Utilisez une bibliothèque comme cryptography pour une implémentation plus robuste.
+Vous pouvez générer des clés de taille différente avec la fonction cryptography.hazmat.primitives.asymmetric.generate_pair.
+Pour travailler avec des blocs de données, divisez votre message en blocs de la taille de la clé moins la marge nécessaire.
+
+El-Gamal :
+De même, utilisez cryptography ou une autre bibliothèque pour une implémentation plus fiable.
+Modifiez votre fonction gen_key pour prendre en charge la génération de clés de taille variable.
+Assurez-vous que votre implémentation prend en charge des blocs de données de la taille appropriée.
+
+ECC (Courbes elliptiques) :
+Utilisez cryptography ou pycryptodome pour une implémentation d'ECC.
+
+Les courbes elliptiques ont généralement des paramètres spécifiques qui définissent leur taille. Vous pouvez choisir différentes courbes avec des tailles différentes.
+Pour les blocs de données, adaptez votre algorithme à la manipulation de points sur la courbe elliptique pour gérer des parties de données.
+Taille des clés :
+Pour les tailles spécifiques que vous avez mentionnées (164 bits, 256 bits, etc.), assurez-vous de choisir des tailles qui sont valides pour chaque algorithme. Par exemple, RSA avec des clés de 164 bits peut ne pas être sécurisé, mais RSA-2048 (1024 bits) ou RSA-3072 est généralement recommandé. Pour ECC, la taille de la clé est généralement déterminée par la taille de la courbe elliptique utilisée.
+
+N'oubliez pas de gérer les padding et autres considérations de sécurité appropriés pour chaque algorithme. En utilisant des bibliothèques standard et bien testées, vous garantissez une implémentation plus robuste et sécurisée.
