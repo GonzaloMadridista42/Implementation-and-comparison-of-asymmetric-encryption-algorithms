@@ -2,45 +2,30 @@ if __name__ == '__main__':
     # Measure the total execution time
     start_time_total = time.time()
     
-    # Generate an ECC key pair
+    # Measure the key generation time
     start_time_key_generation = time.time()
-    private_key, public_key = generate_ecc_key_pair(user_response_elliptic_curve)
+    g = random.randint(2, q)
+    key = gen_key(q)
+    h = power(g, key, q)
     end_time_key_generation = time.time()
     key_generation_time = end_time_key_generation - start_time_key_generation
     
     # Print/display the key generation time
     print("\nKey generation time: {:.6f} seconds ({:.6f} milliseconds)".format(key_generation_time, key_generation_time * 1000))
     
-    # Calculate the shared secret
-    start_time_shared_secret = time.time()
-    shared_secret = calculate_shared_secret(private_key, public_key)
-    end_time_shared_secret = time.time()
-    shared_secret_calculation_time = end_time_shared_secret - start_time_shared_secret
-    
-    # Print/display the shared secret calculation time
-    print("\nShared secret calculation time: {:.6f} seconds ({:.6f} milliseconds)".format(shared_secret_calculation_time, shared_secret_calculation_time * 1000))
-    
-    # Derive the secret key
-    start_time_derive_secret_key = time.time()
-    derived_key = derive_secret_key(shared_secret, 32)
-    end_time_derive_secret_key = time.time()
-    derive_secret_key_time = end_time_derive_secret_key - start_time_derive_secret_key
-    
-    # Print/display the derive secret key time
-    print("\nDerive secret key time: {:.6f} seconds ({:.6f} milliseconds)".format(derive_secret_key_time, derive_secret_key_time * 1000))
-    
-    # Encrypt the message with AES-GCM
+    # Measure the encryption time
     start_time_encryption = time.time()
-    ciphertext, iv, tag = encrypt_message_AES_GCM(msg, derived_key)
+    ct, p,s = encryption(msg, q, h, g)
     end_time_encryption = time.time()
     encryption_time = end_time_encryption - start_time_encryption
     
     # Print/display the encryption time
     print("\nEncryption time: {:.6f} seconds ({:.6f} milliseconds)".format(encryption_time, encryption_time * 1000))
     
-    # Decrypt the message with AES-GCM
+    # Measure the decryption time
     start_time_decryption = time.time()
-    decrypted_message = decrypt_message_AES_GCM(ciphertext, iv, tag, derived_key)
+    pt = decryption(ct, p, key, q)
+    d_msg = ''.join(pt)
     end_time_decryption = time.time()
     decryption_time = end_time_decryption - start_time_decryption
     

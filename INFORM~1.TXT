@@ -1,10 +1,24 @@
-Liste de courbes elliptiques (EC) à utiliser pour implémenter l'algorithme de cryptage et de décryptage de message pleins et clairs ECC (ECC) :
+En matière de cryptographie, il n'y a pas de tailles de clés ElGamal spécifiquement standardisées comme pour RSA. Cependant, les tailles de clés couramment utilisées en production pour ElGamal sont généralement les mêmes que celles recommandées pour d'autres algorithmes asymétriques, comme RSA.
 
-1.- Curve25519
-2.- Curve448
-3.- Ed25519
-4.- Ed448
-5.- Curve41417
-6.- Ed25519ph
+Voici une liste de tailles de clés standard généralement utilisées en production :
 
-Ces courbes elliptiques sont reconnues pour leur sécurité et leurs performances dans différents contextes cryptographiques. N'oubliez pas de consulter les dernières recommandations en matière de sécurité et de suivre les bonnes pratiques de cryptographie lors de la mise en œuvre de vos systèmes.
+2048 bits
+3072 bits
+4096 bits
+6144 bits
+8192 bits
+16384 bits
+
+Ces tailles de clés sont conformes aux recommandations actuelles pour assurer un niveau de sécurité adéquat dans différents contextes d'utilisation. Vous pouvez choisir la taille en fonction de vos besoins spécifiques en matière de sécurité et des recommandations de votre environnement.
+
+La détermination des tailles de clés dans la cryptographie dépend souvent des normes et des recommandations en vigueur au moment de l'utilisation. Les tailles de clés standard que j'ai mentionnées, comme 2048 bits, 3072 bits, 4096 bits, etc., sont généralement basées sur des recommandations de sécurité et ne sont pas nécessairement dictées par une seule norme spécifique.
+
+Cependant, certaines organisations, comme le NIST (National Institute of Standards and Technology), émettent des recommandations et des lignes directrices qui peuvent influencer le choix des tailles de clés. Pour les algorithmes asymétriques, y compris ElGamal, vous pouvez vous référer aux publications et aux normes du NIST, telles que les publications FIPS (Federal Information Processing Standards), pour obtenir des recommandations spécifiques.
+
+Il est important de suivre les normes de cryptographie en vigueur dans votre contexte d'utilisation spécifique pour assurer une sécurité optimale.
+
+Les tailles de clés que j'ai mentionnées précédemment, comme 2048 bits, 3072 bits, 4096 bits, sont en effet basées sur des recommandations du NIST (National Institute of Standards and Technology) et d'autres organismes de normalisation. Ces recommandations sont souvent définies dans les publications FIPS (Federal Information Processing Standards) du NIST.
+
+Par exemple, le NIST a émis des recommandations dans la publication FIPS 186-4 concernant la génération des clés pour les algorithmes de chiffrement à clé publique, y compris les recommandations pour les tailles de clés utilisées avec les algorithmes comme RSA et DSA. Cependant, il peut également y avoir d'autres normes et documents émis par le NIST ou d'autres organismes qui influent sur les tailles de clés utilisées dans différents contextes de sécurité.
+
+Il est recommandé de consulter les documents officiels du NIST et d'autres organismes de normalisation pour obtenir des détails spécifiques sur les tailles de clés recommandées pour vos besoins en sécurité.

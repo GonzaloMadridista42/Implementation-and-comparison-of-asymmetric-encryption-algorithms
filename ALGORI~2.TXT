@@ -1,0 +1,37 @@
+if user_response == "a":
+    user_response_message = input("Please write down a message that contains 256 characters, including spaces: ")
+    while len(user_response_message) > 256:
+        print("The message written down has more than 256 characters, including spaces!")
+        user_response_message = input("Please write down a message that contains 256 characters, including spaces:")
+    Si (user_response_message<=256) alors
+    
+
+if user_response == "b":
+    user_response_message = input("Please write down a message that contains 384 characters, including spaces: ")
+    while len(user_response_message) > 384:
+        print("The message written down has more than 384 characters, including spaces!")
+        user_response_message = input("Please write down a message that contains 384 characters, including spaces:")
+
+if user_response == "c":
+    user_response_message = input("Please write down a message that contains 512 characters, including spaces: ")
+    while len(user_response_message) > 512:
+        print("The message written down has more than 512 characters, including spaces!")
+        user_response_message = input("Please write down a message that contains 512 characters, including spaces:")
+
+if user_response == "d":
+    user_response_message = input("Please write down a message that contains 768 characters, including spaces: ")
+    while len(user_response_message) > 768:
+        print("The message written down has more than 768 characters, including spaces!")
+        user_response_message = input("Please write down a message that contains 768 characters, including spaces:")
+
+if user_response == "e":
+    user_response_message = input("Please write down a message that contains 1024 characters, including spaces: ")
+    while len(user_response_message) > 1024:
+        print("The message written down has more than 1024 characters, including spaces!")
+        user_response_message = input("Please write down a message that contains 1024 characters, including spaces:")
+
+if user_response == "f":
+    user_response_message = input("Please write down a message that contains 2048 characters, including spaces: ")
+    while len(user_response_message) > 2048:
+        print("The message written down has more than 2048 characters, including spaces!")
+        user_response_message = input("Please write down a message that contains 2048 characters, including spaces:")
