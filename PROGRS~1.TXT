@@ -1,0 +1,7 @@
+Progrès d'écriture des critiques faites à l'algorithme de chiffrement et de déchiffrement de messages clairs et pleins RSA :
+
+	Gestion de grandes  quantités de données.
+	Comparaison des temps d’exécution avec différentes tailles de clés.
+	Quantité de mémoire utilisée lors de la génération de clés.
+	Comparaison de la taille des messages clairs et pleins utilisés, pour bien sécuriser les messages cryptés et décryptés
+	L'effet avalanche.
